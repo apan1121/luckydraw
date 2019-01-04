@@ -7,6 +7,7 @@ export default {
         let shortlist = JSON.parse(localStorage.getItem('shortlist'));
         let shortlistInput = JSON.parse(localStorage.getItem('shortlistInput'));
         let shortlist_sort = JSON.parse(localStorage.getItem('shortlist_sort'));
+        let prizeList = JSON.parse(localStorage.getItem('prizeList'));
 
 
         if ( typeof config != "object") {
@@ -25,6 +26,11 @@ export default {
             shortlist_sort = [];
         }
 
+        if (!Array.isArray(prizeList)) {
+            prizeList = [];
+        }
+
+
 
         if ( typeof shortlistInput != "string") {
             shortlistInput = "";
@@ -36,6 +42,7 @@ export default {
         state.shortlist = shortlist;
         state.shortlistInput = shortlistInput;
         state.shortlist_sort = shortlist_sort;
+        state.prizeList = prizeList;
     },
     saveToLocalStorage(state, params) {
         let config = JSON.stringify( state.config) ;
@@ -43,6 +50,7 @@ export default {
         let shortlist = JSON.stringify( state.shortlist);
         let shortlistInput = JSON.stringify( state.shortlistInput);
         let shortlist_sort = JSON.stringify( state.shortlist_sort);
+        let prizeList = JSON.stringify( state.prizeList);
 
 
         localStorage.setItem('config', config);
@@ -50,6 +58,7 @@ export default {
         localStorage.setItem('shortlist', shortlist);
         localStorage.setItem('shortlistInput', shortlistInput);
         localStorage.setItem('shortlist_sort', shortlist_sort);
+        localStorage.setItem('prizeList', prizeList);
     },
 
     setConfig(state, params) {
@@ -65,10 +74,19 @@ export default {
         state.shortlist = [];
         state.shortlistInput = "";
         state.shortlist_sort = [];
+        state.prizeList = [];
     },
 
     triggerOpenEditListModal(state, params) {
         state.triggerOpenEditList = new Date().getTime();
+    },
+
+    triggerOpenEditPrizeModal(state, params) {
+        state.triggerOpenPrizeList = new Date().getTime();
+    },
+
+    triggerOpenGetLuckyModal(state, params) {
+        state.triggerOpenGetLucky = new Date().getTime();
     },
 
     triggerOpenLuckyModal(state, params) {
@@ -197,6 +215,10 @@ export default {
         state.focusSN = params;
     },
 
+    setFocusPrizeSN(state, params) {
+        state.focusPrizeSN = params;
+    },
+
     setFocusSN2LuckySN(state, params) {
         let shortlist = JSON.parse(JSON.stringify(state.shortlist));
         let luckySN = JSON.parse(JSON.stringify(state.luckySN));
@@ -219,5 +241,34 @@ export default {
         state.luckySN = luckySN;
         state.shortlist = shortlist;
 
-    }
+    },
+
+    saveNewPrize(state, params) {
+        let prizeList = JSON.parse(JSON.stringify(state.prizeList));
+        prizeList.push( params.prize );
+        state.prizeList = prizeList;
+    },
+
+    saveEditPrize(state, params) {
+        let prizeList = JSON.parse(JSON.stringify(state.prizeList));
+        let shortlist = JSON.parse(JSON.stringify(state.shortlist));
+
+        let oldPrize = prizeList[params.sn];
+        let newPrize = params.prize;
+
+        prizeList[params.sn] = params.prize;
+
+        shortlist = shortlist.map(function(data){
+            data.award = data.award.map(function(award){
+                if (award == oldPrize) {
+                    award = newPrize;
+                }
+                return award;
+            });
+            return data;
+        });
+
+        state.prizeList = prizeList;
+        state.shortlist = shortlist;
+    },
 }

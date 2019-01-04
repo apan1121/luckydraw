@@ -34,9 +34,15 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" v-on:click="editList">
+                            <a class="nav-link" v-on:click="editShortlist">
                                 <i class="fas fa-user-edit"></i>
-                                編輯名單
+                                候選名單
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" v-on:click="editPrizeList">
+                                <i class="fas fa-award"></i>
+                                獎項名單
                             </a>
                         </li>
                         <li class="nav-item">
@@ -72,6 +78,8 @@
             </div>
         </main>
         <edit-list-modal></edit-list-modal>
+        <prize-list-modal></prize-list-modal>
+        <get-lucky-modal></get-lucky-modal>
         <lucky-modal></lucky-modal>
         <result-modal></result-modal>
         <setting-modal></setting-modal>

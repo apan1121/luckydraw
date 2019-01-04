@@ -16,7 +16,8 @@
                         </div>
                         中獎獎項
                         <div class="form-group">
-                            <input type="text" class="form-control text-center" v-model="award" placeholder="輸入獎項名稱">
+                            <div class="form-control text-center" v-html="award"></div>
+                            <!-- <input type="text" class="form-control text-center" v-model="award" placeholder="輸入獎項名稱"> -->
                         </div>
                     </div>
                 </div>
@@ -68,13 +69,15 @@ export default {
             "triggerOpenLucky",
             "focusShortlist",
             "focusSN",
+            "focusPrizeSN",
+            "prizeList",
         ])
     },
     mounted() {
         const that = this;
         targetDom = $(that.$el);
         targetDom.bind("shown.bs.modal", function() {
-            that.award = "";
+            that.award = that.prizeList[ that.focusPrizeSN ];
         });
     },
     props: {},

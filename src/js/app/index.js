@@ -9,6 +9,8 @@ import headerBarBox from './components/common/headerBarBox';
 import candidateBox from './components/common/candidateBox';
 
 import editListModal from './components/common/editListModal';
+import prizeListModal from './components/common/prizeListModal';
+import getLuckyModal from './components/common/getLuckyModal';
 import luckyModal from './components/common/luckyModal';
 import resultModal from './components/common/resultModal';
 import settingModal from './components/common/settingModal';
@@ -79,6 +81,13 @@ var Page = new Vue({
                 that.saveToLocalStorage();
             }
         },
+        prizeList: {
+            deep: true,
+            handler: function (val, oldVal) {
+                const that = this;
+                that.saveToLocalStorage();
+            }
+        },
     },
     computed: {
         ...mapGetters([
@@ -89,6 +98,7 @@ var Page = new Vue({
             "shortlist",
             "shortlistInput",
             "shortlist_sort",
+            "prizeList",
         ])
     },
     mounted() {
@@ -99,6 +109,8 @@ var Page = new Vue({
         headerBarBox,
         candidateBox,
         editListModal,
+        prizeListModal,
+        getLuckyModal,
         luckyModal,
         resultModal,
         settingModal,

@@ -3,6 +3,10 @@ export default {
 
     triggerOpenEditList: null,
 
+    triggerOpenPrizeList: null,
+
+    triggerOpenGetLucky: null,
+
     triggerOpenLucky: null,
 
     triggerOpenResult: null,
@@ -15,7 +19,11 @@ export default {
 
     shortlist_sort: [],
 
+    prizeList: [],
+
     luckySN: [],
+
+    focusPrizeSN: null,
 
     focusSN: null,
 

@@ -17,6 +17,12 @@ export default {
     triggerOpenEditListModal({ commit }, params) {
         commit("triggerOpenEditListModal", params);
     },
+    triggerOpenEditPrizeModal({ commit }, params) {
+        commit("triggerOpenEditPrizeModal", params);
+    },
+    triggerOpenGetLuckyModal({ commit }, params) {
+        commit("triggerOpenGetLuckyModal", params);
+    },
     triggerOpenLuckyModal({ commit }, params) {
         commit("triggerOpenLuckyModal", params);
     },
@@ -36,11 +42,22 @@ export default {
     setFocusSN({commit}, params) {
         commit("setFocusSN", params);
     },
+    setFocusPrizeSN({commit}, params) {
+        commit("setFocusPrizeSN", params);
+    },
+
     setFocusSN2LuckySN({commit}, params) {
         commit("setFocusSN2LuckySN", params);
     },
 
     editShortList({commit}, params) {
         commit("editShortList", params);
+    },
+
+    saveNewPrize({commit}, params) {
+        commit("saveNewPrize", params);
+    },
+    saveEditPrize({commit}, params) {
+        commit("saveEditPrize", params);
     },
 };

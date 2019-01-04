@@ -3,11 +3,47 @@ export default {
 
     triggerOpenEditList: state => state.triggerOpenEditList,
 
+    triggerOpenPrizeList: state => state.triggerOpenPrizeList,
+
+    triggerOpenGetLucky: state => state.triggerOpenGetLucky,
+
     triggerOpenLucky: state => state.triggerOpenLucky,
 
     triggerOpenResult: state => state.triggerOpenResult,
 
     triggerOpenSetting: state => state.triggerOpenSetting,
+
+    prizeList: state => state.prizeList,
+
+    prizeListByAward: function(state){
+        let shortlist = JSON.parse(JSON.stringify(state.shortlist));
+        let prizeList = JSON.parse(JSON.stringify(state.prizeList));
+
+        let matchPrize = {};
+        shortlist.forEach(function(data){
+            if (data.award.length > 0) {
+                data.award.forEach(function(award){
+                    if (!!award) {
+                        if (!!matchPrize[award]) {
+                            matchPrize[award] += 1;
+                        } else {
+                            matchPrize[award] = 1;
+                        }
+                    }
+                });
+            }
+        });
+
+        let prizeListByAward = prizeList.map(function(prize, sn){
+            return {
+                sn: sn,
+                prize: prize,
+                count: matchPrize[prize] || 0,
+            };
+        });
+
+        return prizeListByAward;
+    },
 
     shortlist: state => state.shortlist,
 
@@ -40,6 +76,7 @@ export default {
         return validSN;
     },
 
+    focusPrizeSN: state => state.focusPrizeSN,
     focusSN: state => state.focusSN,
     luckySN: state => state.luckySN,
 
@@ -73,4 +110,5 @@ export default {
 
         return matchShortlist.concat(matchShortlist2);
     },
+
 }
