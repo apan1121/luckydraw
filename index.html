@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Lucky Draw</title>
+    <meta name='author' content='Byron.Chen' />
+    <meta name='apple-mobile-web-app-title' content='Lucky Draw' />
+    <meta name='apple-mobile-web-app-capable' content='yes' />
+    <meta name='apple-touch-fullscreen' content='yes' />
+    <meta name='apple-mobile-web-app-status-bar-style' content='black' />
+    <meta name='mobile-web-app-capable' content='yes' />
+    <meta name='description' content='Lucky Draw' />
+    <link rel="icon" href="./dist/img/logo/logo.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="./dist/css/icomoon/style.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./dist/css/page/page.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <script src="./dist/js/chunk/node_modules.bundle.js"></script>
+</head>
+<body>
+    <div id="appBox" cz-shortcut-listen="true" style="padding-top: 4.0rem;">
+        <header-bar-box inline-template>
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+                <a class="navbar-brand" href="#">
+                    <i class="icon-power"></i>
+                    {{config.webTitle || "Lucky Draw"}}
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" v-on:click="editList">
+                                <i class="fas fa-user-edit"></i>
+                                編輯名單
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" v-on:click="getLucky">
+                                <i class="fas fa-vote-yea"></i>
+                                抽一把
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" v-on:click="showResult">
+                                <i class="fas fa-poll"></i>
+                                顯示抽獎結果
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav justify-content-end">
+                        <li class="nav-item">
+                            <a class="nav-link" v-on:click="showSetting">
+                                <i class="fas fa-cog"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header-bar-box>
+        <main style="padding: 0px 10px">
+            <div class="shortlist-box" v-if="shortlistBySort.length > 0">
+                <transition-group name="shortlist" class="shortlist" tag="div" enter-active-class="fadeInUp" leave-active-class="fadeOutDown">
+                    <candidate-box v-for="(candidateInfo, candidateIndex) in shortlistBySort" :key="candidateInfo.sn" v-bind:candidate-index="candidateIndex" v-bind:candidate-info="candidateInfo"></candidate-box>
+                </transition-group>
+            </div>
+            <div class="shortlist-empty-box" v-else>
+            </div>
+        </main>
+        <edit-list-modal></edit-list-modal>
+        <lucky-modal></lucky-modal>
+        <result-modal></result-modal>
+        <setting-modal></setting-modal>
+    </div>
+    <script src="./dist/js/app/index.bundle.js"></script>
+</body>
+</html>
