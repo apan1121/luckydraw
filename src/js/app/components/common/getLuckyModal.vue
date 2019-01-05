@@ -33,7 +33,7 @@
 <script>
 import Vue from 'vue';
 import { mapActions, mapGetters } from 'vuex';
-
+import {mixpanel} from 'lib/common/util';
 
 const audio = {
     ding: new Audio("./dist/mp3/ding.mp3"),
@@ -111,6 +111,7 @@ export default {
 
             targetDom.modal("hide");
 
+            mixpanel.track("get lucky!!");
             if (that.validSN.length > 0) {
                 clearTimeout(luckyActionTimer);
                 that.luckyAction();
@@ -166,6 +167,7 @@ export default {
         targetDom = $(that.$el);
         targetDom.bind("shown.bs.modal", function() {
             that.award = "";
+            mixpanel.track("open getLucky");
         });
     },
     props: {

@@ -16,7 +16,7 @@
                         <div class="input-group mb-3" v-if="focusEditSN === prizeSN">
                             <input type="text" ref="prizeEdit" class="form-control" v-model="editPrize" placeholder="編輯獎項名稱">
                             <div class="input-group-append">
-                                <span class="input-group-text btn-success" style="cursor: pointer" v-on:click="saveEditPrize">
+                                <span class="input-group-text btn-success" style="cursor: pointer" v-on:click="saveEditPrize(prize)">
                                     <i class="far fa-save"></i>
                                 </span>
                             </div>
@@ -56,6 +56,7 @@
 <script>
 import Vue from 'vue';
 import { mapActions, mapGetters } from 'vuex';
+import {mixpanel} from 'lib/common/util';
 
 let targetDom = null;
 
@@ -75,7 +76,7 @@ export default {
             that.focusEditSN = prizeSN;
             that.editPrize = prizeName;
         },
-        saveEditPrize: function(){
+        saveEditPrize: function(prize){
             const that = this;
             if ( !!that.editPrize) {
                 let prizeList = JSON.parse( JSON.stringify( that.prizeList) );
@@ -87,11 +88,14 @@ export default {
                     const params = {
                         sn: that.focusEditSN,
                         prize: that.editPrize,
+                        orgPrize: prize,
                     }
 
                     that.$store.dispatch("saveEditPrize", params);
                     that.editPrize = "";
                     that.focusEditSN = false;
+
+                    mixpanel.track("edit prize", params);
                 } else {
                     alert("已有相同的獎項");
                 }
@@ -113,6 +117,8 @@ export default {
                     that.$store.dispatch("saveNewPrize", params);
                     that.newPrize = "";
                     that.addNewFlag = false;
+
+                    mixpanel.track("add prize", params);
                 } else {
                     alert("已有相同的獎項");
                 }
@@ -140,6 +146,8 @@ export default {
 
             that.focusEditSN = false;
             that.editPrize= '';
+
+            mixpanel.track("open prize list");
         });
     },
     props: {

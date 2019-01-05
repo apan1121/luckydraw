@@ -33,6 +33,8 @@
 import Vue from 'vue';
 import { mapActions, mapGetters } from 'vuex';
 
+import {mixpanel} from 'lib/common/util';
+
 let targetDom = null;
 
 export default {
@@ -50,10 +52,16 @@ export default {
 
             that.$store.dispatch("setShortListInput", params);
             targetDom.modal("hide");
+
+            mixpanel.track("save shortlist", params);
         },
         randomSort: function(){
             const that = this;
             that.$store.dispatch("setShortlistRandomSort");
+            const params = {
+                shortlist_sort: that.shortlist_sort,
+            };
+            mixpanel.track("random sort shortlist", params);
         }
     },
     watch: {
@@ -66,6 +74,7 @@ export default {
         ...mapGetters([
             "triggerOpenEditList",
             "shortlistInput",
+            "shortlist_sort",
         ])
     },
     mounted() {
@@ -73,6 +82,7 @@ export default {
         targetDom = $(that.$el);
         targetDom.bind("shown.bs.modal", function(){
             that.shortlistTextarea = that.shortlistInput;
+            mixpanel.track("open shortlist");
         });
     },
     props: {

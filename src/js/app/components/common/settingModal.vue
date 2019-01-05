@@ -70,7 +70,11 @@
 import Vue from 'vue';
 import { mapActions, mapGetters } from 'vuex';
 
+import {mixpanel} from 'lib/common/util';
+
 let targetDom = null;
+
+let mixpanelTrackerTimer = null;
 
 export default {
     data: function() {
@@ -102,6 +106,10 @@ export default {
     methods: {
         save: function() {
             const that = this;
+            const params = {
+                config: that.input,
+            };
+            mixpanel.track("save setting", params);
             targetDom.modal("hide");
         },
         cancel: function(){
@@ -110,12 +118,14 @@ export default {
                 config: that.orgInput,
             };
             that.$store.dispatch("setConfig", params);
+            mixpanel.track("cancel setting", params);
             targetDom.modal("hide");
         },
         clear: function(){
             const that = this;
             if (confirm("您確定要清除所有的資料嗎？")) {
                 that.$store.dispatch("clearAllData");
+                mixpanel.track("clear all data");
                 targetDom.modal("hide");
             }
         },
@@ -129,6 +139,11 @@ export default {
                     config: that.input,
                 };
                 that.$store.dispatch("setConfig", params);
+
+                clearTimeout(mixpanelTrackerTimer);
+                mixpanelTrackerTimer = setTimeout(function(){
+                    mixpanel.track("try setting", params);
+                },2000);
             },
         },
         triggerOpenSetting: function() {
@@ -147,8 +162,9 @@ export default {
         targetDom = $(that.$el);
         targetDom.bind("shown.bs.modal", function() {
             let config = JSON.parse(JSON.stringify(that.config));
-            that.input = { ...that.input, ...config}
-            that.orgInput = { ...that.orgInput, ...config}
+            that.input = { ...that.input, ...config};
+            that.orgInput = { ...that.orgInput, ...config};
+            mixpanel.track("open setting");
         });
     },
     props: {

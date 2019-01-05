@@ -26,6 +26,7 @@
     "css-loader": "^1.0.1",
     "cssnano": "^4.1.7",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "fingerprintjs2": "^1.8.6",
     "jquery": "^3.3.1",
     "jquery-circle-progress": "^1.2.2",
     "js-cookie": "^2.2.0",

@@ -77,6 +77,7 @@
 <script>
 import Vue from 'vue';
 import { mapActions, mapGetters } from 'vuex';
+import {mixpanel} from 'lib/common/util';
 
 let targetDom = null;
 
@@ -114,6 +115,8 @@ export default {
             link.setAttribute("download", that.config.webTitle + "中獎名單.csv");
             document.body.appendChild(link); // Required for FF
             link.click();
+
+            mixpanel.track("download result", cvs);
         },
         openEdit: function(index, editFlag){
             const that = this;
@@ -130,6 +133,8 @@ export default {
             }
 
             that.resultList = resultList;
+
+            mixpanel.track("want edit", { editInfo: that.editsortList});
         },
         save: function(){
             const that = this;
@@ -138,6 +143,8 @@ export default {
                 data: editsortList,
             };
             that.$store.dispatch("editShortList", params);
+
+            mixpanel.track("save edit", params);
         },
     },
     watch: {
@@ -167,6 +174,7 @@ export default {
         const that = this;
         targetDom = $(that.$el);
         targetDom.bind("shown.bs.modal", function() {
+            mixpanel.track("open result");
         });
     },
     props: {

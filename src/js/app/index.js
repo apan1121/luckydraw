@@ -3,7 +3,7 @@ import { mapActions, mapGetters } from 'vuex';
 
 import {createStore} from 'lib/store/index';
 
-import {history_route, string} from 'lib/common/util';
+import {history_route, string, mixpanel} from 'lib/common/util';
 
 import headerBarBox from './components/common/headerBarBox';
 import candidateBox from './components/common/candidateBox';
@@ -34,7 +34,7 @@ var Page = new Vue({
     methods: {
         init: function(){
             const that = this;
-
+            mixpanel.track("init page");
             that.$store.dispatch("initSystem");
         },
         saveToLocalStorage: function(){
