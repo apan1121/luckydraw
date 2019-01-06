@@ -2,12 +2,29 @@ export default {
     initSystem(state, params) {
         let defaultConfig = JSON.parse( JSON.stringify( state.defaultConfig) );
 
-        let config = JSON.parse(localStorage.getItem('config'));
-        let luckySN = JSON.parse(localStorage.getItem('luckySN'));
-        let shortlist = JSON.parse(localStorage.getItem('shortlist'));
-        let shortlistInput = JSON.parse(localStorage.getItem('shortlistInput'));
-        let shortlist_sort = JSON.parse(localStorage.getItem('shortlist_sort'));
-        let prizeList = JSON.parse(localStorage.getItem('prizeList'));
+        let luckyDraw = JSON.parse(localStorage.getItem('luckyDrawSetting'));
+
+        // let config = JSON.parse(localStorage.getItem('config'));
+        // let luckySN = JSON.parse(localStorage.getItem('luckySN'));
+        // let shortlist = JSON.parse(localStorage.getItem('shortlist'));
+        // let shortlistInput = JSON.parse(localStorage.getItem('shortlistInput'));
+        // let shortlist_sort = JSON.parse(localStorage.getItem('shortlist_sort'));
+        // let prizeList = JSON.parse(localStorage.getItem('prizeList'));
+
+        let config = {};
+        let luckySN = [];
+        let shortlist = [];
+        let shortlistInput = "";
+        let shortlist_sort = [];
+        let prizeList = [];
+        if (!!luckyDraw) {
+            config = luckyDraw.config || {};
+            luckySN = luckyDraw.luckySN || [];
+            shortlist = luckyDraw.shortlist || [];
+            shortlistInput = luckyDraw.shortlistInput || "";
+            shortlist_sort = luckyDraw.shortlist_sort || [];
+            prizeList = luckyDraw.prizeList || [];
+        }
 
 
         if ( typeof config != "object") {
@@ -45,20 +62,31 @@ export default {
         state.prizeList = prizeList;
     },
     saveToLocalStorage(state, params) {
-        let config = JSON.stringify( state.config) ;
-        let luckySN = JSON.stringify( state.luckySN);
-        let shortlist = JSON.stringify( state.shortlist);
-        let shortlistInput = JSON.stringify( state.shortlistInput);
-        let shortlist_sort = JSON.stringify( state.shortlist_sort);
-        let prizeList = JSON.stringify( state.prizeList);
+        let config = JSON.parse(JSON.stringify( state.config));
+        let luckySN = JSON.parse(JSON.stringify( state.luckySN));
+        let shortlist = JSON.parse(JSON.stringify( state.shortlist));
+        let shortlistInput = JSON.parse(JSON.stringify( state.shortlistInput));
+        let shortlist_sort = JSON.parse(JSON.stringify( state.shortlist_sort));
+        let prizeList = JSON.parse(JSON.stringify( state.prizeList));
 
 
-        localStorage.setItem('config', config);
-        localStorage.setItem('luckySN', luckySN);
-        localStorage.setItem('shortlist', shortlist);
-        localStorage.setItem('shortlistInput', shortlistInput);
-        localStorage.setItem('shortlist_sort', shortlist_sort);
-        localStorage.setItem('prizeList', prizeList);
+        let luckyDraw = {
+            config: config,
+            luckySN: luckySN,
+            shortlist: shortlist,
+            shortlistInput: shortlistInput,
+            shortlist_sort: shortlist_sort,
+            prizeList: prizeList,
+        };
+
+        localStorage.setItem('luckyDrawSetting', JSON.stringify(luckyDraw));
+
+        // localStorage.setItem('config', config);
+        // localStorage.setItem('luckySN', luckySN);
+        // localStorage.setItem('shortlist', shortlist);
+        // localStorage.setItem('shortlistInput', shortlistInput);
+        // localStorage.setItem('shortlist_sort', shortlist_sort);
+        // localStorage.setItem('prizeList', prizeList);
     },
 
     setConfig(state, params) {
