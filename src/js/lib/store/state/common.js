@@ -37,6 +37,9 @@ export default {
         doneColor: "#c0c0c0",
 
         webTitle: '',
+        headerColor: '#343a40',
+        backgroundImg: '',
+        backgroundOpacity: 0.5,
         defaultRunTime: 50,
     },
 
@@ -50,6 +53,9 @@ export default {
         doneColor: "#c0c0c0",
 
         webTitle: '',
+        headerColor: '#343a40',
+        backgroundImg: '',
+        backgroundOpacity: 0.5,
         defaultRunTime: 50,
     },
 }

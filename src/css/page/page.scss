@@ -10,9 +10,19 @@
     transition: all 0.01s;
 }
 
-.shortlist-box {
 
-    // height: calc( 100vh - 60px);
+.bg-img{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0px;
+    left: 0px;
+    z-index: -1;
+    background-position: center center;
+    background-size: cover;
+}
+
+.shortlist-box {
     .shortlist {
         display: flex;
         flex-direction: row;
@@ -58,7 +68,6 @@
 
                 .candidate-wrapper {
                     box-shadow: 0px 0px 5px #aaa;
-                    // background: #ffc;
                 }
             }
 
@@ -67,7 +76,6 @@
                 opacity: 0.6;
 
                 .candidate-wrapper {
-                    // background: #fcc;
                 }
             }
         }

@@ -23,7 +23,7 @@
 <body>
     <div id="appBox" cz-shortcut-listen="true" style="padding-top: 4.0rem;">
         <header-bar-box inline-template>
-            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top" v-bind:style="{ 'background-color' :config.headerColor }">
                 <a class="navbar-brand" href="#">
                     <i class="icon-power"></i>
                     {{config.webTitle || "Lucky Draw"}}
@@ -83,6 +83,12 @@
         <lucky-modal></lucky-modal>
         <result-modal></result-modal>
         <setting-modal></setting-modal>
+        <div v-if="config.backgroundImg" class="bg-img"
+            v-bind:style="{
+                'background-image': 'url(' + config.backgroundImg + ')',
+                opacity: config.backgroundOpacity,
+            }"
+        ></div>
     </div>
 
 

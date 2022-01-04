@@ -15,6 +15,7 @@ import luckyModal from './components/common/luckyModal';
 import resultModal from './components/common/resultModal';
 import settingModal from './components/common/settingModal';
 
+
 const store = createStore([
     "common",
 ]);

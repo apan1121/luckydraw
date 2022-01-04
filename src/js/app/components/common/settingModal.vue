@@ -17,6 +17,25 @@
                             <label for="exampleInputEmail1">網站標題</label>
                             <input type="text" class="form-control"   v-model="input.webTitle">
                         </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1" style="display: flex;">
+                                Header 顏色
+                                <span :style="{ background: input.headerColor, width: '20px', height: '20px', display: 'inline-block', border: '1px solid #999' }"></span>
+                            </label>
+                            <input type="text" class="form-control"   v-model="input.headerColor">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1" style="display: flex;">
+                                背景圖片
+                            </label>
+                            <input type="text" class="form-control"   v-model="input.backgroundImg">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1" style="display: flex;">
+                                背景透明度
+                            </label>
+                            <input type="number" class="form-control" v-model.number="input.backgroundOpacity" min="0" max="1" step="0.1">
+                        </div>
                         <hr />
                         <div class="form-group">
                             <label for="exampleInputEmail1">區塊寬度 [{{input.boxWidth}} px]</label>
@@ -81,6 +100,9 @@ export default {
         return {
             input: {
                 webTitle: "",
+                headerColor: '#343a40',
+                backgroundImg: '',
+                backgroundOpacity: 0.5,
                 boxWidth: 0,
                 boxHeight: 0,
                 titleSize: 0,
@@ -92,6 +114,9 @@ export default {
             },
             orgInput: {
                 webTitle: "",
+                headerColor: '#343a40',
+                backgroundImg: '',
+                backgroundOpacity: 0.5,
                 boxWidth: 0,
                 boxHeight: 0,
                 titleSize: 0,
