@@ -1,40 +1,42 @@
 import Fingerprint2 from 'fingerprintjs2';
 import string from './string';
-let fingerInfo = null;
-new Fingerprint2().get(function(result, components) {
-    let identify = new Fingerprint2().x64hash128(components.map(function(pair) { return pair.value }).join(), 31);
-    mixpanel_modul.data.identify = identify;
+
+const fingerInfo = null;
+new Fingerprint2().get((result, components) => {
+    const identify = new Fingerprint2().x64hash128(components.map(pair => pair.value).join(), 31);
+    // console.log(identify);
+    mixpanel_module.data.identify = identify;
     mixpanel.identify(identify);
-    mixpanel_modul.actWaitFunc();
+    mixpanel_module.actWaitFunc();
 });
 
-const mixpanel_modul = {
+const mixpanel_module = {
     data: {
-        identify: "",
+        identify: '',
         tabId: string.getRandomString(10),
         data: null,
     },
     waitFunc: [],
-    actWaitFunc: function(){
-        if (mixpanel_modul.waitFunc.length >= 0) {
-            console.log("actWaitFunc", mixpanel_modul.waitFunc);
-            mixpanel_modul.waitFunc.forEach(function(actFunc){
+    actWaitFunc(){
+        if (mixpanel_module.waitFunc.length >= 0) {
+            // console.log('actWaitFunc', mixpanel_module.waitFunc);
+            mixpanel_module.waitFunc.forEach((actFunc) => {
                 actFunc();
             });
         }
     },
-    track: function(action, inputData) {
-
-        let actionFunc = function(){
-            let data = { ...mixpanel_modul.data, data: inputData };
-            mixpanel.track(action, data);
+    track(action, inputData){
+        const actionFunc = function(){
+            const data = { ...mixpanel_module.data, data: inputData };
+            // console.log('mixpanel', action, data);
+            window.mixpanel.track(action, data);
         };
 
-        if (!!mixpanel_modul.data.identify) {
+        if (mixpanel_module.data.identify) {
             actionFunc();
         } else {
-            mixpanel_modul.waitFunc.push(actionFunc);
+            mixpanel_module.waitFunc.push(actionFunc);
         }
-    }
+    },
 };
-export default mixpanel_modul;
+export default mixpanel_module;

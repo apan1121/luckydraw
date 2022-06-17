@@ -1,56 +1,60 @@
 export default {
-    test: false,
+    adBlocked: false,
+    favicon: {
+        default: './dist/img/faviconDefault.ico',
+        run: './dist/img/faviconRun.ico',
+        award: './dist/img/faviconAward.ico',
+    },
 
-    triggerOpenEditList: null,
+    /**
+     * 正在看的 LuckyDraw
+     */
+    luckyDrawFocusKey: false,
 
-    triggerOpenPrizeList: null,
+    /**
+     * 目前的 luckyDraw 是亂數產生
+     */
+    luckyDrawIsRandom: false,
 
-    triggerOpenGetLucky: null,
+    /**
+     * 初始選擇列表
+     */
+    luckyDrawChooseList: [],
 
-    triggerOpenLucky: null,
-
-    triggerOpenResult: null,
-
-    triggerOpenSetting: null,
-
-    shortlistInput: "",
-
-    shortlist: [],
-
-    shortlist_sort: [],
-
-    prizeList: [],
-
-    luckySN: [],
-
-    focusPrizeSN: null,
-
-    focusSN: null,
-
+    /**
+     * 預設值
+     */
     defaultConfig: {
         boxWidth: 100,
         boxHeight: 60,
+        boxMH: 3,
+        boxMV: 3,
         titleSize: 15,
         subtitleSize: 12,
-        defaultColor: "#FFF",
-        focusColor: "#ffcf97",
-        doneColor: "#c0c0c0",
+        defaultColor: '#FFF',
+        focusColor: '#ffcf97',
+        doneColor: '#c0c0c0',
 
-        webTitle: '',
+        webTitle: 'Lucky Draw',
         headerColor: '#343a40',
         backgroundImg: '',
         backgroundOpacity: 0.5,
         defaultRunTime: 50,
     },
 
+    /**
+     * 目前值
+     */
     config: {
-        boxWidth: 0,
-        boxHeight: 0,
-        titleSize: 0,
-        subtitleSize: 0,
-        defaultColor: "#FFF",
-        focusColor: "#ffcf97",
-        doneColor: "#c0c0c0",
+        boxWidth: 100,
+        boxHeight: 60,
+        boxMH: 3,
+        boxMV: 3,
+        titleSize: 15,
+        subtitleSize: 12,
+        defaultColor: '#FFF',
+        focusColor: '#ffcf97',
+        doneColor: '#c0c0c0',
 
         webTitle: '',
         headerColor: '#343a40',
@@ -58,4 +62,135 @@ export default {
         backgroundOpacity: 0.5,
         defaultRunTime: 50,
     },
-}
+
+    /**
+     * 候選名單
+     */
+    candidateList: [],
+
+    /**
+     * 候選人亂數
+     */
+    candidateList_sort: [],
+
+    /**
+     * 獎品表
+     */
+    prizeList: [],
+
+    /**
+     * 正在抽到的人
+     */
+    focusCandidateSN: null,
+
+    /**
+     * 正在抽得獎品
+     */
+    focusPrizeSN: null,
+
+    /**
+     * 已經得獎的候選人
+     */
+    haveAwardCandidateSN: [],
+
+    /**
+     * 抽獎跑循環等待時間
+     */
+    getLuckyWaitTimeArr: [
+        {
+            limit: 500,
+            wait: 10,
+        },
+        {
+            limit: 100,
+            wait: 20,
+        },
+        {
+            limit: 50,
+            wait: 30,
+        },
+        {
+            limit: 30,
+            wait: 80,
+        },
+        {
+            limit: 6,
+            wait: 100,
+        },
+        {
+            limit: 4,
+            wait: 500,
+        },
+        {
+            limit: 3,
+            wait: 800,
+        },
+        {
+            limit: 2,
+            wait: 1000,
+        },
+        {
+            limit: 1,
+            wait: 1100,
+        },
+    ],
+
+    /**
+     * 開啟候選人列表
+     */
+    triggerOpenCandidateList: null,
+
+    /**
+     * 開啟獎項列表
+     */
+    triggerOpenPrizeList: null,
+
+    /**
+     * 開啟抽一把
+     */
+    triggerOpenGetLucky: null,
+
+    /**
+     * 打開抽獎結果
+     */
+    triggerOpenLucky: null,
+
+    /**
+     * 打開抽獎狀況
+     */
+    triggerOpenResult: null,
+
+    /**
+     * 設定
+     */
+    triggerOpenSetting: null,
+
+    /**
+     * 開啟資料轉換
+     */
+    triggerOpenUpgradeData: null,
+
+    /**
+     * 亂數
+     */
+    randomCandidateNames: '鬱惠雯,陳嘉夫,郭筱雯,王嘉琪,魏江全,施乃士,黃承東,吳秋琴,蔡禮月,楊俊賢,劉韻如,林義人,黃科星,梁子江,蕭于庭,溫佩芳,李呈琴,柯智傑,張馨妃,李俊緯,許宗儒,鄭伯吟,林心怡,陳志偉,黃慧達,黃儀林,劉琬婷,黃登音,洪綠玟,蔡依和,黃陽凌,蔡怡芳,黃智謙,金鈞珊,周禮美,柯康源,黃世沛,韓博昀,陳韋名,鄭嘉慧,李昀卉,蕭中堅,賴于婷,陳孝睿,蔡明瑄,陳哲榮,郭春鑫,王幸萍,陳凱翔,李承妏,陳建輝,李上文,陳雅伸,陳穎添,徐文傑,陳姿迪,葉修桂,黃惠以,陳盈甄,曾俊賢,林政玲,張雅玲,翁彥翔,戴美君,陳佑谷,方思佳,趙盛丞,胡淑芬,陳人毓,陳珮瑜,曾麗卿,夏重秀,許育妹,羅盈君,賴淑芬,鐘卓原,趙明吉,吳靜宜,李文彬,徐俐昆,呂婉玲,高雯珊,李惠珠,金茹云,楊玫芝,趙兆伯,張雅宣,陳秉霞,周智文,賴韋廷,李宛冰,林瓊舜,黃柏毅,李宗成,楊馥廷,林家佑,蘇雅雯,鄭文岑,葉怡雯,王華禎,黃仲美,林奕靖,侯嘉添,陳世貴,王寧平,黃筱辛,黃欣樺,林俊廷,李紹寧,周華人,林偉智,王士芷,張峻恬,陳人亦,吳榮洋,彭靜怡,謝宛茹,許善香,袁佩穎,謝南任,楊秀珍,陳彥玟,吳俊瑋,王秀冰,林嘉俐,廖婉劭,何雨修,蘇彥博,林建瑋,尤怡雯,吳政綸,吳貞儀,扈世昌,曾典亨,陳威惟,柯立雄,李書瑋,邱瓊文,黃嘉音,林美惠,張永茂,林佳洋,白歡禎,陳順韋,陳淑芳,駱依婷,王國偉,施大珊,劉家銘,楊志鴻,徐治旺,王玉鳳,李玄傑,許穎青,林華雪,林康妃,邵勝傑,劉綠善,謝詩水,陳行緯,蔡詠彬,杜允康,童有春,彭幼凡,林郁輝,蕭長信,陳上禎,吳健豪,施青全,韓大駿,林雲恬,蔣宇軒,陳羿欣,劉耿宣,蔡佩亞,李秀玲,高皓秋,王禹合,江威德,李怡君,宋曉侑,鄭怡伶,彭秀芬,洪美慧,張偉倫,陳佳瑜,趙裕翔,林文吟,甘其原,許家美,陳婷婷,林伶博,鞏中惟,郭和妍,陳政霖,吳秉啟,魏宇軒,歐白瑩,高志嘉,蔡宗翰,吳玟瑜,林燦坤,陳淑君,盧誠紫,蔡文雯,路致辰,陳明智,林鈞季,劉雪仲,蕭佩璇,黃雅琳,李登賢,桑敏珠,沈慧萍,黃建菁,黎緯玄,林振夢,林東添,李宜珊,黃孟勳,童光君,林琬婷,趙兆順,童千琪,李信豪,王俊卿,林家誠,吳淑敏,丁雅婷,黃雅沛,王柏源,張恭珮,郭嘉惠,張順琬,夏婷婷,賴苡映,黃智龍,蔡康行,陳志杰,彭偉翔,林立明,王林薇,徐瓊慧,高婉如,吳其宏,蔣筱婷,林建秋,王馨信,陳昭禾,涂燦育,林淑萍,張志宏,賴怡伶,林立偉,陳智偉,王庭寶,蘇俞能,陳孟涵,蕭淑惠,林姿啟,蔡雅利,梁白聖,潘雅惠,劉毓芬,陳駿利,方軍順,陳奕辰,張家松,王怡菱,趙思賢,錢俊安,楊淑慧,蘇怡禎,蔡佳修,舒智堯,馮志祥,林志傑,蔣嘉琪,吳胤中,陳昕誠,謝昌幸,陳姿君,林以人,張惟婷,李俞憲,張志紫,李怡羽,高馨儀,黃琪嬌,周雅瑞,蔡明亦,龐英傑,高亭君,張凱佩,林于真,陳水謙,鄭宥馨,陳宇翔,謝亭杰,魏俊宏,趙雪諭,林品倫,張永士,劉玉妃,曾維倫,林淑珍,傅子弘,陳于貞,楊淑樺,林金鳳,鄭靖桓,李家維,黃慧東,趙怡君,唐佩怡,林晴季,張雅惠,謝崇桓,林孟堅,潘家弘,溫懿源,林正甫,許怡秀,蔡真惠,陳秀琴,崔明宏,溫向禾,黃欣怡,楊雲婷,吳俊賢,錢淑敏,李皇航,李武謙,陳秉勳,王進典,王予靖,劉美俐,林家華,林均苓,徐炳亨,廖琬韋,王聖柏,張玉祥,張怡軍,彭奕廷,李志強,蔡宗新,李郁婷,賴沛昇,陳韋韋,錢正偉,熊惟潔,陳姿坤,黃子劭,羅馨儀,郭韻如,劉惠雯,錢韋志,劉育霖,史法馨,盧佩蓉,郭佩昆,黃盛琇,賴佩俐,黃柏宇,陳秀麟,賴苑雅,王怡珮,王俊成,洪偉貞,劉惠珍,陳蘭丹,張俊翔,蔡雅善,林耀中,劉欣怡,蕭仕其,黃玉秀,黃怡秀,林宏民,陳淑萍,陳翊一,陳鈺雯,趙宛雲,鄭信宏,黃慧苓,陳俊宏,蔣秀玲,李恒中,彭淑慧,楊雅琪,鄔均燦,鄭淑惠,蘇恒雪,劉琬昕,李佩君,吳佩瑞,李宇平,張睿典,施均城,胡傑財,周志杰,李承秋,張柔玫,吳韻如,陳秀玲,黃雅君,潘淑敏,黃婉婷,邱少蕙,黃清添,阮羽其,張萱萍,潘心怡,林淑惠,李佩儒,戴聖龍,李建生,林郁丞,林苡真,吳舒妮,黃泰真,劉士堅,蔡彥廷,林建彰,冷惠雯,洪嘉心,顏宛蓉,連杰吉,張惠源,黃仰友,陳禹勇,陳鴻蓮,洪原天,黃雅凱,陳俊一,陳映沛,袁舜瑤,阮漢鴻,戴樂霞,高舒云,蔡懿瑋,朱振豪,沈財慈,張淑福,林子姍,周雲伯,陳修映,郭興彬,吳與山,李美珍,林珮君,林美慧,王阿禾,林嘉婷,彭毅芝,李政秋,林俊麟,王上其,黃碧白,郭郁雯,林子佳,劉至水,汪靜宜,張昀水,羅昱宏,李如君,吳淑萍,楊佳俊,張莉婷,楊剛陽,陳欣樺,蔡奕辰,陳禎志,全志琪,張志琪,簡韋廷,郭靜如,林信昆,楊群菁,陳昆伯,吳玉鳳,許文芝,林建霖,劉玫馨,趙慧婷,陳怡杰,陳昱旭,陳雅菁,葉靜怡,徐智傑,吳木興,張嘉祥,朱凱翔,倪光屏,劉漢琪,李芃玉,蔣啟麟,王宛真,張文彥,錢俊傑,張姿君,林政菱,黃玉紹,金家瑋,陳慧仲,吳靜亦,陳亭琇,賴志豪,米政哲,劉倫能,林孟璇,林奕翔,蔡亦儒,白奕廷,柳華陽,林進法,張雅雯,傅仕祥,李文福,王文昇,趙先仲,丁舒松,陳志峰,陽瑞良,許承穎,白孟璇,李佳正,林夢龍,洪元音,張嬌哲,吳勝俐,陳雅秀,蔡羿妏,鄧竣傑,謝仕銘,吳金冰,林禎政,宋仲修,姜韻昆,黃子臻,劉昱諭,姚淑貞,戴怡伶,李秀英,楊雅婷,王緯玫,王彥儒,黃與峰,蔡宛君,蕭廷杰,游賢天,鄭平郁,游湖玄,黃安昌,楊賢蓮,黃惠傑,林俊杰,黃雅芳,許淳妮,黃枝峰,盧婉君,張卓榮,王淑珍,顏禹貞,黃彥君,崔素蓮,楊欣玲,黃千珮,林丞樺,張信宏,阮常夢,曾宜珊,黃克岳,楊牧能,林勳昀,吳祐誠,陳舒涵,曾建輝,林雅云,黃奎堅,林美慧,陳善添,張科雅,林淑梅,曾明慧,王昱芬,王泓季,黃淑玲,黃秀揚,李玉為,吳靜發,林雅筑,陳家宏,葉宇翔,李家豪,張書書,陳正姍,洪其蓉,黃珮聖,裴苡虹,劉婉君,李宗達,陳美惠,楊雅男,諸鎮宇,陳奕萱,謝人宸,葉奕生,林裕靖,吳右淑,金文彥,汪芃弘,吳任昕,黃靜珠,姚宜婷,林韋一,葉佩儒,王君娟,柯韋雄,許德華,吳勝傑,李平威,陳紫琦,黃俊毅,林法豐,吳秉書,林彥順,張淑華,陳添婷,劉昶昕,涂育菁,汪羿青,侯郁文,吳淑吉,衡建彰,蔡尚緯,蔡政紹,朱靜雯,陳慧玉,許美慧,張文芳,施佩芬,陳啟貴,王柏鈞,李志豪,吳江忠,林珊吉,阮馨儀,劉雅琪,李尹志,朱彥君,郭怡芳,陳千蓁,錢茜人,蔡仁傑,鄭凱喜,劉士平,項瑋倫,吳婉瑜,王淑如,黃奕禾,張維陽,張雅義,吳佳芳,應子傑,林瑋博,王大順,孫怡如,鄒淑惠,張淑婷,蕭雅雪,劉郁婷,吳佳禾,李富學,羅秉邦,劉玉萍,余寧花,汪中貴,張佳玲,潘誠宏,鄭凱謙,黃建松,徐銘雪,李妙富,曹威天,許俐惟,劉佩君,吳欣瑞,李威斌,張俊嘉,張季仲,王宗清,巴子傑,陳慧佳,李宗琳,曹浩臻,吳雅琇,黃瓊珍,林家冰,謝麗雯,林素吟,翁家銘,賴淑娟,施賢竹,顏依潔,王雅妹,王豪佳,張雅宇,王宗憲,王雅琪,蔣士哲,林怡秀,吳雅婷,陳麗均,洪文彬,張佳燕,戴昱華,林彥智,鄭重博,胡昱宣,黃哲豪,楊瓊慧,陳淑貞,黃靜芳,楊怡君,黃昀蓉,黃郁婷,吳韻如,馮慧君,杜聖凱,張宗憲,彭伯行,李威廷,吳孟涵,林佳慧,馮怡菁,羅台岑,林正惟,葉人勳,林臻,毛淑芬,湯傑海,吳逸群,金冠伶,周蕙吉,郭奕廷,畢華山,姜茂書,賴姿卿,張哲銘,謝逸群,袁南孜,吳志文,陳怡菁,鄭怡婷,陳佑霖,林建正,王俊仁,趙榮旺,郭素洋,江依婷,張先甫,何怡廷,李千佐,游筱涵,陳哲貴,劉義喬,邱漢妏,陳吉禮,劉欣怡,蔡人豪,甘璇珠,蔡逸哲,江志穎,倪智平,翁軒豪,馬彥君,謝凡薇,穆宜真,吳綺卿,陸思穎,吳晴漢,戎俊宏,王哲嘉,張威寧,韓博鈞,楊湘婷,葉明輝,陳馨儀,陽志鴻,許進昀,桑彥伶,張凱中,蔡羽娥,殷家良,李財元,劉穎任,洪健喬,許建豪,張天琦,王詩隆,葉智強,馬佳燕,陳麗樺,潘康龍,孫依林,李易善,王芝淑,蔡孟諭,簡志映,王明儒,許怡君,韓佳琪,陳佩花,錢博文,陳佩璇,黃漢忠,刁敏昀,邱芸英,黃玉婷,楊珍彥,陳于駿,袁莉宇,姚育霖,謝丞綠,劉芳儀,李郁育,尚瑞山,曾伶靖,吳向鑫,魯雅云,馮淑慧,李冠中,劉淑芬,林竹幸,劉宜君,江炳冰,李培倫,李文凱,許依萍,方維哲,王旻琦,賴珮雯,謝瓊德,陳財亮,謝明紹,宋雨方,陸嘉君,楊薇平,蔡喬盛,杜姿瑩,張柏勳,楊逸群,盧佳芳,詹宏伶,譚萱芸,柴耀德,馮美娟,劉禹伶,陳俐玫,周水菁,張志偉,王素玟,王信豪,黃偉倫,陳怡婷,毛勳萱,吳淑娟,李育純,仇尚鴻,潘千珍,王景全,林守琦,王志盈,姚秉谷,劉家芳,朱雅婷,呂雯志,郭紹禮,錢義志,林健銘,楊吉均,阮至雲,毛孟佳,林俊珮,曹坤青,溫筠軒,陳俊霖,陳亭順,宋美珠,賴韋華,黃志偉,王山孜,王玉婷,茹文傑,賴凱翔,鄭雅筑,陳佳蓉,張奕興,鄭翔岑,許心怡,莫芳霖,許禎亮,廖家哲,邱俊伶,劉嘉宏,翁鈞彬,毛筱婷,陳冠玟,楊筱夫,蕭桂山,李仁傑,黃子陽,曾靖江,宋奕英,謝明名,李俊瑋,蔡佩麟,許郁湖,張振宇,陳亭友,林詩雅,廖冠霖,倪偉傑,王勝卉,林郁吟,許美君,周怡祥,黃宗翰,黃國財,林孟霞,王惠如,鄭凱玟,吳宗儒,林世白,王依婷,王美其,陳鎮宇,吳惠珠,倪堯宣,王勳玟,蔡淑娟,吳宛幸,沈姿妤,邱嘉雯,夏祖志,張明輝,林怡安,池兆珮,吳嘉文,吳俊雄,陳于婷,蔡海綸,吳茜原,陳文富,鐘仁傑,黃怡雯,陳淑全,謝玄苓,路湘婷,謝英傑,趙玉玲,劉彥冰,趙建宏,陳峻蓉,蔡佩祥,李佳年,溫湖亮,錢家豪,陳莉雯,吳宗玲,劉瑋倫,陳馨儀,陳智妹,黃怡萱,黃庭容,林欣瑜,張淑亦,靳靜怡,胡家銘,黃玉茜,郭柏毅,林裕信,吳建彰,柳佳蓉,翁菁珊,劉家弘,張維軍,姚靜宜,羅皓欣,傅旭如,王雅君,陳宜婷,劉俊凱,吳孟怡,李紫芬,鐘淑如,張展昀,陳姿沛',
+    randomCandidatePos: '總裁_o,副總裁,董事長_o,董事,監事,常務監事,總經理_o,副總經理,執行長_o,財務長_o,資訊長_o,知識長_o,營運長_o,技術長_o,顧問,特別助理,廠長,副廠長,協理,處長,副處長,經理,襄理,管理顧問,事業開發,行政經理,地區經理,高級會計,高級顧問,高級雇員,高級秘書,服務部經理,行政人員,職員,秘書,私人秘書,行政辦事員,財務主任,財務經理,審計長,會計部經理,會計主管,會計,稽核,財務,總務,人事部經理,人事部職員,人力資源,法務,法律顧問,採購,出納員,業務經理,業務主任,客服,網站管理專員,產品行銷,公關,外銷部經理,市場開發部經理,銷售助理,銷售主管,包裝設計師,生産部經理,生産線主管,研究開發工程師,應用工程師,化學工程師,機械工程師,采礦工程師,作業員,工程技術員,質量管理工程師,銷售助理,銷售主管,銷售部經理,銷售監管',
+    randomPrize: 'iPhone,iPad,Apple Watch,Macbook Pro,1000元獎金,3000元獎金,5000元獎金,10000元獎金,百貨公司 1000 禮券,百貨公司 2000 禮券,百貨公司 5000 禮券,電風扇,冰箱,冷氣,電鍋,氣炸鍋,微波爐,烤箱,60吋電視,升降桌,麻將,降噪耳機,80萬房車,關島五日遊,北海道十日遊,綠島兩日遊,太平島一日遊,百貨公司餐券,星巴克禮券,飯店住宿券,電影票兩張,高級腕表,特休五天,外接硬碟,抱枕,西提牛排,衛生紙兩條,A4紙一箱,雞蛋一盒,神戶牛排,高麗菜一顆,戰斧豬排,黃金一兩,健康檢查,Switch,PS5,公司股票1張,透氣風衣,跑鞋,行李箱,50年陳釀酒',
+    randomColor: '#FEE4CF,#FEC0DC,#FEADE7,#DCC1CD,#BBF9E5,#EECFFF,#C2D1FF,#ADD8FF,#C1C8DB,#FAF3BB,#D6FFCF,#FFFCC2,#FFE5AD,#DBDAC1,#DBDAC1',
+    randomBgImg: ',,,,,,https://i.imgur.com/fAjZSBu.jpeg,https://i.imgur.com/OWxB9yc.jpeg,https://i.imgur.com/HpGLGxS.png,https://i.imgur.com/icBnFXZ.jpeg,https://i.imgur.com/jWQBfJY.jpeg,https://i.imgur.com/UEhS7e8.jpeg,https://i.imgur.com/xKi1E4U.jpeg,https://i.imgur.com/car6vRJ.jpeg,https://i.imgur.com/3UsU1vC.jpeg,https://i.imgur.com/DAqlYwh.jpeg,https://i.imgur.com/i3WoA1A.png,https://i.imgur.com/qMMJnNn.jpeg,https://i.imgur.com/P4BIfKe.jpeg,https://i.imgur.com/rnpsd4E.jpeg,https://i.imgur.com/z4zVvX1.jpeg,https://i.imgur.com/kf7tkok.jpeg,https://i.imgur.com/Mnwr2x1.jpeg,https://i.imgur.com/qsqF8vr.jpeg,https://i.imgur.com/HiYxOs6.jpeg,https://i.imgur.com/nPfD8cm.jpeg,https://i.imgur.com/JdaVmOO.png,https://i.imgur.com/5yeBVeM.jpeg,https://i.imgur.com/dCS4tQk.jpeg,https://i.imgur.com/9wHVhck.jpeg,https://i.imgur.com/ZqoEU9o.jpeg,https://i.imgur.com/yD5I5WH.jpeg,https://i.imgur.com/JKNnuSE.jpeg,https://i.imgur.com/YwAmPYu.jpeg,https://i.imgur.com/T7NBjJm.jpeg,https://i.imgur.com/ujJ3g1k.jpeg,https://i.imgur.com/6Q9rDjW.jpeg,https://i.imgur.com/zfU3vsM.jpeg,https://i.imgur.com/pDLPvFj.jpeg,https://i.imgur.com/pDLPvFj.jpeg,https://i.imgur.com/YWgcovn.jpeg,https://i.imgur.com/L07HyvL.jpeg,https://i.imgur.com/ZyNbQn6.jpeg,https://i.imgur.com/JGFRHHa.jpeg,https://i.imgur.com/H8IpPH2.jpeg,https://i.imgur.com/oCsPYGj.png,https://i.imgur.com/X6Iu6iB.jpeg,https://i.imgur.com/B1AZqOb.jpeg,https://i.imgur.com/e10uiOY.png,https://i.imgur.com/j9jfxqt.png,https://i.imgur.com/SukExBO.png,https://i.imgur.com/Hjmsizi.png,https://i.imgur.com/c5NvSCc.jpeg,https://i.imgur.com/9WAotEY.jpeg,https://i.imgur.com/7VHqY7X.jpeg',
+    randomConfig: {
+        backgroundImg: '',
+        backgroundOpacity: 0.5,
+        boxHeight: 69,
+        boxWidth: 146,
+        defaultColor: '#FFFFCC',
+        defaultRunTime: 50,
+        doneColor: '#99F',
+        focusColor: '#FCCF',
+        headerColor: '#343a40',
+        subtitleSize: 16,
+        titleSize: 21,
+    },
+
+    isTutorial: false,
+};

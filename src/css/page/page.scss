@@ -1,4 +1,7 @@
+@import '../common/_variable.scss';
+
 .navbar {
+    user-select: none;
     .navbar-collapse {
         .nav-item {
             cursor: pointer;
@@ -10,61 +13,109 @@
     transition: all 0.01s;
 }
 
+.main-page{
+    padding-top: 60px;
+}
+
+.cursor-pointer{
+    cursor: pointer;
+}
 
 .bg-img{
     position: fixed;
-    width: 100vw;
-    height: 100vh;
     top: 0px;
     left: 0px;
     z-index: -1;
+    width: 100vw;
+    height: 100vh;
     background-position: center center;
     background-size: cover;
 }
 
+.lucky-draw-choose-list{
+    .lucky-draw-choose-item{
+        display: flex;
+        overflow: hidden;
+        border-radius: $spacer * 0.25;
+        font-size: $spacer * 1.25;
+        user-select: none;
+        .lucky-draw-choose-text{
+            flex: 1;
+            padding: $spacer * 0.75 $spacer;
+            background: $blue-200;
+            color: $black;
+            cursor: pointer;
+            &:active{
+                background: $blue-600;
+            }
+        }
+        .lucky-draw-choose-del{
+            flex: none;
+            padding: $spacer * 0.75 $spacer;
+            background: $blue-200;
+            color: $black;
+            cursor: pointer;
+            &:active{
+                background: $blue-600;
+            }
+        }
+    }
+}
+
+
 .shortlist-box {
     .shortlist {
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
         align-content: space-around;
         align-items: stretch;
+        flex-direction: row;
+        flex-wrap: wrap;
         justify-content: center;
         height: 100%;
+        // min-height: calc(100vh - 60px);
 
         .candidate-box {
             @include transition;
+            user-select: none;
 
             .candidate-wrapper {
-                margin: 3px;
-                padding: 5px 5px;
-                text-align: center;
-                border: 1px solid #ccc;
-                height: 40px;
-                width: 80px;
                 display: flex;
+                align-items: center;
                 flex-direction: column;
                 justify-content: center;
-                align-items: center;
+                margin: 3px;
+                padding: 5px 5px;
+                width: 80px;
+                height: 40px;
+                border: 1px solid #ccc;
                 border-radius: 4px;
-                box-shadow: 0px 0px 5px #ccc;
                 background: #fff;
+                box-shadow: 0px 0px 5px #ccc;
+                text-align: center;
+
                 @include transition;
 
                 .candidate-name {
                     font-weight: 600;
+                    overflow:hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    width: 100%;
                 }
 
                 .candidate-pos {
-                    font-size: 11px;
                     font-weight: 100;
-
+                    font-size: 11px;
+                    overflow:hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    width: 100%;
                 }
             }
 
             &.focus {
-                transform: scale(1.3);
                 z-index: 1;
+                transform: scale(1.3);
 
                 .candidate-wrapper {
                     box-shadow: 0px 0px 5px #aaa;
@@ -72,8 +123,8 @@
             }
 
             &.done {
-                transform: scale(0.9);
                 opacity: 0.6;
+                transform: scale(0.9);
 
                 .candidate-wrapper {
                 }
@@ -83,35 +134,67 @@
 }
 
 .shortlist-empty-box{
-    height: calc(100vh - 80px);
-    margin: 5px;
-    background: rgba( 100, 100, 100, 0.3);
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    height: calc(100vh - 80px);
     border-radius: 10px;
-    &:after{
-        content: "請輸入抽獎名單";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate( -50%, -50%);
-        font-size: 25px;
-        font-weight: 900;
+    background: rgba( 100, 100, 100, 0.3);
+    color: #222;
+    text-align: center;
+    font-weight: 900;
+    font-size: 25px;
+    .shortlist-empty-info{
+        max-height: 100%;
+        overflow: auto;
+    }
+    a{
+        border-bottom: 1px solid #222;
+        color: #222;
+        &:hover{
+            text-decoration: unset;
+        }
     }
 }
 
 .lucky-modal {
     .candidate-box {
         .candidate-wrapper {
-            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            margin: $spacer auto;
+            padding: 5px 5px;
+            width: auto!important;
+            height: auto!important;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+            box-shadow: 0px 0px 5px #ccc;
+            text-align: center;
+
+            @include transition;
 
             .candidate-name {
+                font-weight: 600;
+                overflow:hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                width: 100%;
                 font-size: 30px!important;
-                font-weight: 900;
             }
 
             .candidate-pos {
+                font-weight: 100;
+                font-size: 11px;
+                overflow:hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                width: 100%;
                 font-size: 20px!important;
-                font-weight: 500;
             }
         }
     }
@@ -125,15 +208,15 @@
                     position: relative;
 
                     &:after {
-                        content: "";
                         position: absolute;
                         bottom: 0px;
                         left: 50%;
-                        transform: translateX(-50%);
                         width: 0%;
                         height: 1px;
                         background: #eee;
+                        content: "";
                         transition: all 0.2s;
+                        transform: translateX(-50%);
                     }
 
                     &.active {
@@ -150,5 +233,18 @@
                 }
             }
         }
+    }
+}
+
+.google-support-box{
+    width: 100%;
+    margin-bottom: $spacer * 0.5;
+    .error{
+        padding: 5px;
+        background-color: rgba($orange-100, 0.3);
+        font-size: 20px;
+        text-align: center;
+        color: $gray-600;
+        border-radius: $spacer * 0.25;
     }
 }

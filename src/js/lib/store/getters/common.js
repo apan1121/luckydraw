@@ -1,114 +1,182 @@
 export default {
+    adBlocked: state => state.adBlocked,
+    favicon: state => state.favicon,
+
     config: state => state.config,
 
-    triggerOpenEditList: state => state.triggerOpenEditList,
+    /**
+     * 舊抽獎活動選單
+     */
+    luckyDrawChooseList: state => state.luckyDrawChooseList,
 
-    triggerOpenPrizeList: state => state.triggerOpenPrizeList,
+    luckyDrawFocusKey: state => state.luckyDrawFocusKey,
 
-    triggerOpenGetLucky: state => state.triggerOpenGetLucky,
+    luckyDrawIsRandom: state => state.luckyDrawIsRandom,
 
-    triggerOpenLucky: state => state.triggerOpenLucky,
-
-    triggerOpenResult: state => state.triggerOpenResult,
-
-    triggerOpenSetting: state => state.triggerOpenSetting,
-
-    prizeList: state => state.prizeList,
-
-    prizeListByAward: function(state){
-        let shortlist = JSON.parse(JSON.stringify(state.shortlist));
-        let prizeList = JSON.parse(JSON.stringify(state.prizeList));
-
-        let matchPrize = {};
-        shortlist.forEach(function(data){
-            if (data.award.length > 0) {
-                data.award.forEach(function(award){
-                    if (!!award) {
-                        if (!!matchPrize[award]) {
-                            matchPrize[award] += 1;
-                        } else {
-                            matchPrize[award] = 1;
-                        }
-                    }
-                });
-            }
+    /**
+     * 重新排序的列表
+     */
+    candidateListBySort(state){
+        const candidateList = JSON.parse(JSON.stringify(state.candidateList));
+        const candidateListMapping = {};
+        candidateList.forEach((item) => {
+            candidateListMapping[item.sn] = item;
         });
-
-        let prizeListByAward = prizeList.map(function(prize, sn){
-            return {
-                sn: sn,
-                prize: prize,
-                count: matchPrize[prize] || 0,
-            };
-        });
-
-        return prizeListByAward;
-    },
-
-    shortlist: state => state.shortlist,
-
-    shortlistInput: state => state.shortlistInput,
-
-    shortlist_sort: state => state.shortlist_sort,
-
-    shortlistBySort: function(state) {
-        let shortlist = JSON.parse(JSON.stringify(state.shortlist));
-        let shortlist_sort = JSON.parse(JSON.stringify(state.shortlist_sort));
-
-        let data = shortlist_sort.map(function(sn) {
-            return shortlist[sn];
-        });
+        const candidateList_sort = JSON.parse(JSON.stringify(state.candidateList_sort));
+        const data = candidateList_sort.map(sn => candidateListMapping[sn]);
 
         return data;
     },
 
-    validShortlistSN: function(state) {
-        let shortlist = JSON.parse(JSON.stringify(state.shortlist));
-        let luckySN = JSON.parse(JSON.stringify(state.luckySN));
+    /**
+     * 候選人列表
+     */
+    candidateList: state => state.candidateList,
 
-
-        let validSN = shortlist.filter(function(data) {
-            return !luckySN.includes(data.sn) && !data.del;
-        }).map(function(data) {
-            return data.sn;
+    /**
+     * 候選人對應表
+     */
+    candidateMapping(state){
+        const candidateMapping = {};
+        const candidateList = JSON.parse(JSON.stringify(state.candidateList));
+        candidateList.forEach((item) => {
+            candidateMapping[item.sn] = item;
         });
+        return candidateMapping;
+    },
+
+    /**
+     * 候選人列表亂數排序
+     */
+    candidateList_sort: state => state.candidateList_sort,
+
+
+    /**
+     * 開啟候選人列表
+     */
+    triggerOpenCandidateList: state => state.triggerOpenCandidateList,
+
+    /**
+     * 開啟抽獎列表
+     */
+    triggerOpenGetLucky: state => state.triggerOpenGetLucky,
+
+    /**
+     * 開啟設定
+     */
+    triggerOpenSetting: state => state.triggerOpenSetting,
+
+    /**
+     * 開啟獎品列表
+     */
+    triggerOpenPrizeList: state => state.triggerOpenPrizeList,
+
+    /**
+     * 開啟中獎訊息
+     */
+    triggerOpenLucky: state => state.triggerOpenLucky,
+
+    /**
+     * 開啟結果頁面
+     */
+    triggerOpenResult: state => state.triggerOpenResult,
+
+    /**
+     * 開啟資料轉換
+     */
+    triggerOpenUpgradeData: state => state.triggerOpenUpgradeData,
+
+    /**
+     * 獎品列表
+     */
+    prizeList(state){
+        return state.prizeList.filter((item) => {
+            return !!item && item.del === false;
+        });
+        // return state.prizeList.filter(item => item.del === false);
+    },
+
+    /**
+     * 獎勵與中獎人
+     */
+    prizeListByAward(state){
+        const candidateList = JSON.parse(JSON.stringify(state.candidateList));
+        const prizeList = JSON.parse(JSON.stringify(state.prizeList));
+
+        const prizeListCount = {};
+        candidateList.forEach((candidate) => {
+            if (candidate.del === false) {
+                candidate.award.forEach((prize_sn) =>{
+                    if (!prizeListCount[prize_sn]) {
+                        prizeListCount[prize_sn] = 0;
+                    }
+                    prizeListCount[prize_sn] += 1;
+                });
+            }
+        });
+
+        const prizeListByAward = [];
+        prizeList.forEach((prizeInfo) => {
+            if (prizeInfo.del === false) {
+                prizeInfo.count = prizeListCount[prizeInfo.prize_sn] || 0;
+                prizeListByAward.push(prizeInfo);
+            }
+        });
+        return prizeListByAward;
+    },
+
+    /**
+     * 獎勵對應表
+     */
+    prizeMapping(state){
+        const prizeList = JSON.parse(JSON.stringify(state.prizeList));
+        const prizeMapping = {};
+        prizeList.forEach((item) => {
+            if (item.del === false) {
+                prizeMapping[item.prize_sn] = item;
+            }
+        });
+        return prizeMapping;
+    },
+
+    /**
+     * 正在抽的人
+     */
+    focusCandidateSN: state => state.focusCandidateSN,
+
+    /**
+     * 正在抽的獎項
+     */
+    focusPrizeSN: state => state.focusPrizeSN,
+
+    /**
+     * 已經抽到獎的候選人
+     */
+    haveAwardCandidateSN: state => state.haveAwardCandidateSN,
+
+    /**
+     * 抽獎跑循環等待時間
+     */
+    getLuckyWaitTimeArr: state => state.getLuckyWaitTimeArr,
+
+
+    /**
+     * 有效的候選人
+     */
+    validCandidateListSN(state){
+        const candidateList = JSON.parse(JSON.stringify(state.candidateList));
+        const luckySN = JSON.parse(JSON.stringify(state.luckySN));
+
+
+        const validSN = candidateList.filter(data => !luckySN.includes(data.sn) && !data.del).map(data => data.sn);
 
         return validSN;
     },
 
-    focusPrizeSN: state => state.focusPrizeSN,
-    focusSN: state => state.focusSN,
-    luckySN: state => state.luckySN,
+    randomCandidateNames: state => state.randomCandidateNames,
+    randomCandidatePos: state => state.randomCandidatePos,
+    randomPrize: state => state.randomPrize,
+    randomBgImg: state => state.randomBgImg,
 
-    focusShortlist: function(state) {
-        let shortlist = JSON.parse(JSON.stringify(state.shortlist));
-
-        let info = shortlist.filter(function(data) {
-            return data.sn == state.focusSN;
-        });
-
-        return info[0] || null;
-    },
-
-    shortlistByLuckySN: function(state){
-        let luckySN = JSON.parse(JSON.stringify(state.luckySN));
-        let shortlist = JSON.parse(JSON.stringify(state.shortlist));
-
-        let matchShortlist = luckySN.map(function(sn){
-            let data = JSON.parse(JSON.stringify( shortlist[sn] ));
-            data.award = data.award.join(";");
-            return data;
-        });
-
-        let matchShortlist2 = shortlist.filter(function(data){
-            return !luckySN.includes(data.sn);
-        }).map(function(data){
-            data = JSON.parse(JSON.stringify( data ));
-            data.award = data.award.join(";");
-            return data;
-        });
-
-        return matchShortlist.concat(matchShortlist2);
-    },
-
-}
+    isTutorial: state => state.isTutorial,
+};

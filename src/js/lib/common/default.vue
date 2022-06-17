@@ -7,29 +7,29 @@ import Vue from 'vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
-    data: function(){
+    data(){
         return {
 
-        }
+        };
     },
     methods: {
         ...mapActions({
-        })
+        }),
     },
     watch: {
 
     },
     computed: {
         ...mapGetters([
-        ])
+        ]),
     },
-    mounted() {
+    mounted(){
+    },
+    components: {
+
     },
     props: {
 
     },
-    components: {
-
-    }
 };
 </script>

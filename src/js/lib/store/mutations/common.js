@@ -1,302 +1,547 @@
+import { localStorage, popup, string, trackJS } from 'lib/common/util';
+
 export default {
-    initSystem(state, params) {
-        let defaultConfig = JSON.parse( JSON.stringify( state.defaultConfig) );
-
-        let luckyDraw = JSON.parse(localStorage.getItem('luckyDrawSetting'));
-
-        // let config = JSON.parse(localStorage.getItem('config'));
-        // let luckySN = JSON.parse(localStorage.getItem('luckySN'));
-        // let shortlist = JSON.parse(localStorage.getItem('shortlist'));
-        // let shortlistInput = JSON.parse(localStorage.getItem('shortlistInput'));
-        // let shortlist_sort = JSON.parse(localStorage.getItem('shortlist_sort'));
-        // let prizeList = JSON.parse(localStorage.getItem('prizeList'));
-
-        let config = {};
-        let luckySN = [];
-        let shortlist = [];
-        let shortlistInput = "";
-        let shortlist_sort = [];
-        let prizeList = [];
-        if (!!luckyDraw) {
-            config = luckyDraw.config || {};
-            luckySN = luckyDraw.luckySN || [];
-            shortlist = luckyDraw.shortlist || [];
-            shortlistInput = luckyDraw.shortlistInput || "";
-            shortlist_sort = luckyDraw.shortlist_sort || [];
-            prizeList = luckyDraw.prizeList || [];
-        }
-
-
-        if ( typeof config != "object") {
-            config = {};
-        }
-
-        if (!Array.isArray(luckySN)) {
-            luckySN = [];
-        }
-
-        if (!Array.isArray(shortlist)) {
-            shortlist = [];
-        }
-
-        if (!Array.isArray(shortlist_sort)) {
-            shortlist_sort = [];
-        }
-
-        if (!Array.isArray(prizeList)) {
-            prizeList = [];
-        }
-
-
-
-        if ( typeof shortlistInput != "string") {
-            shortlistInput = "";
-        }
-
-
-        state.config = {...defaultConfig, ...config};
-        state.luckySN = luckySN;
-        state.shortlist = shortlist;
-        state.shortlistInput = shortlistInput;
-        state.shortlist_sort = shortlist_sort;
-        state.prizeList = prizeList;
+    setFavicon(state, key){
+        document.querySelector('link[type="image/x-icon"]').setAttribute('href', state.favicon[key]);
     },
-    saveToLocalStorage(state, params) {
-        let config = JSON.parse(JSON.stringify( state.config));
-        let luckySN = JSON.parse(JSON.stringify( state.luckySN));
-        let shortlist = JSON.parse(JSON.stringify( state.shortlist));
-        let shortlistInput = JSON.parse(JSON.stringify( state.shortlistInput));
-        let shortlist_sort = JSON.parse(JSON.stringify( state.shortlist_sort));
-        let prizeList = JSON.parse(JSON.stringify( state.prizeList));
+
+    CheckAdBlock(state, data){
+        state.adBlocked = data;
+    },
+    /**
+     * 系統初始化
+     */
+    initSystem(state, params){
+        const luckyDrawSetting = localStorage.get('luckyDrawSetting', false);
+        const luckyDrawStorage = localStorage.get('luckyDrawStorage', {});
+        const luckyDrawKeyList = Object.keys(luckyDrawStorage);
+
+        if (!!luckyDrawSetting && 1) {
+            this.commit('triggerModal', { key: 'UpgradeData' });
+            // this.commit('upgradeLuckyDrawData', luckyDrawSetting);
+        } else if (luckyDrawKeyList.length === 0) {
+            this.commit('createDefaultLuckyDraw', []);
+        } else {
+            this.commit('setLuckyDrawChooseList', []);
+        }
+    },
+
+    /**
+     * 舊結構轉成新結構
+     */
+    upgradeLuckyDrawData(state){
+        const params = localStorage.get('luckyDrawSetting', false);
+        const defaultConfig = JSON.parse(JSON.stringify(state.defaultConfig));
+        const { config, prizeList, shortlist, shortlist_sort } = params;
+        const luckyDrawFocusKey = string.getRandomString(20);
+
+        const newPrizeList = [];
+        const prizeMapping = {};
+
+        prizeList.forEach((prize_title) => {
+            const prize_sn = string.getRandomString(10);
+            newPrizeList.push({
+                prize_sn,
+                title: prize_title,
+                amount: 1,
+                del: false,
+            });
+            prizeMapping[prize_title] = prize_sn;
+        });
 
 
-        let luckyDraw = {
-            config: config,
-            luckySN: luckySN,
-            shortlist: shortlist,
-            shortlistInput: shortlistInput,
-            shortlist_sort: shortlist_sort,
-            prizeList: prizeList,
+        const prizeCount = {};
+        const candidateList = [];
+        const candidateMapping = {};
+
+        shortlist.forEach((shortInfo) => {
+            if (shortInfo.del === false) {
+                const sn = string.getRandomString(10);
+                const award = [];
+                shortInfo.award.forEach((prize_title) => {
+                    const prize_sn = prizeMapping[prize_title];
+                    award.push(prize_sn);
+                    if (!prizeCount[prize_sn]) {
+                        prizeCount[prize_sn] = 0;
+                    }
+                    prizeCount[prize_sn] += 1;
+                });
+
+                candidateList.push({
+                    sn,
+                    name: shortInfo.name,
+                    pos: shortInfo.pos,
+                    award,
+                    del: false,
+                });
+                candidateMapping[shortInfo.sn] = sn;
+            }
+        });
+
+        const candidateList_sort = [];
+        shortlist_sort.forEach((sn) => {
+            const new_sn = candidateMapping[sn];
+            candidateList_sort.push(new_sn);
+        });
+
+        newPrizeList.forEach((item) => {
+            item.amount = prizeCount[item.prize_sn] || 1;
+        });
+
+        if (!config.webTitle) {
+            config.webTitle = 'Lucky Draw';
+        }
+
+        state.luckyDrawFocusKey = luckyDrawFocusKey;
+        state.config = {
+            ...defaultConfig,
+            ...config,
         };
+        state.prizeList = newPrizeList;
+        state.candidateList_sort = candidateList_sort;
+        state.candidateList = candidateList;
 
-        localStorage.setItem('luckyDrawSetting', JSON.stringify(luckyDraw));
-
-        // localStorage.setItem('config', config);
-        // localStorage.setItem('luckySN', luckySN);
-        // localStorage.setItem('shortlist', shortlist);
-        // localStorage.setItem('shortlistInput', shortlistInput);
-        // localStorage.setItem('shortlist_sort', shortlist_sort);
-        // localStorage.setItem('prizeList', prizeList);
+        state.luckyDrawChooseList = [];
+        this.commit('formatHaveAwardCandidateSN');
+        localStorage.del('luckyDrawSetting');
     },
 
-    setConfig(state, params) {
-        let config = JSON.parse( JSON.stringify( state.config) );
-        config = {...config, ...params.config};
+    /**
+     * 建立舊資料選單
+     */
+    setLuckyDrawChooseList(state){
+        const luckyDrawStorage = localStorage.get('luckyDrawStorage', {});
+        const luckyDrawChooseList = [];
+        Object.keys(luckyDrawStorage).forEach((key) => {
+            luckyDrawChooseList.push({
+                key,
+                title: luckyDrawStorage[key].config.webTitle,
+            });
+        });
+        state.luckyDrawChooseList = luckyDrawChooseList;
+    },
+
+    /**
+     * 建立一筆預設抽獎活動
+     */
+    createDefaultLuckyDraw(state, params){
+        trackJS.mixpanel('createDefaultLuckyDraw_trigger', params);
+        const luckyDrawFocusKey = string.getRandomString(20);
+
+        const config = JSON.parse(JSON.stringify(state.defaultConfig));
+        if (!!params.LuckyDrawName && 1) {
+            config.webTitle = params.LuckyDrawName;
+        }
+        const candidateList = [];
+        const candidateList_sort = [];
+        const prizeList = [];
+
+        state.luckyDrawFocusKey = luckyDrawFocusKey;
+        state.config = config;
+        state.candidateList = candidateList;
+        state.candidateList_sort = candidateList_sort;
+        state.prizeList = prizeList;
+
+        state.luckyDrawChooseList = [];
+        this.commit('formatHaveAwardCandidateSN');
+    },
+
+    /**
+     * 選擇抽獎活動
+     */
+    chooseLuckDrawFromStorage(state, key){
+        const luckyDrawStorage = localStorage.get('luckyDrawStorage', {});
+
+        if (luckyDrawStorage[key]) {
+            const { config, candidateList, candidateList_sort, prizeList } = luckyDrawStorage[key];
+
+            state.luckyDrawFocusKey = key;
+            state.config = config;
+            state.candidateList = candidateList;
+            state.candidateList_sort = candidateList_sort;
+            state.prizeList = prizeList;
+
+            state.luckyDrawChooseList = [];
+            trackJS.mixpanel('LuckyDrawChooseResetData_trigger', { key, config, candidateList, candidateList_sort, prizeList });
+            this.commit('formatHaveAwardCandidateSN');
+        }
+    },
+
+    /**
+     * LocalStorage Listen 同步回 state
+     */
+    listenLocalStorageChange(state, params){
+        const { luckyDrawFocusKey } = state;
+        const luckyDrawStorage = localStorage.get('luckyDrawStorage', {});
+        if (!!luckyDrawStorage[luckyDrawFocusKey] && 1) {
+            const storage = luckyDrawStorage[luckyDrawFocusKey];
+            const LSData = {
+                config: JSON.parse(JSON.stringify(storage.config)),
+                candidateList: JSON.parse(JSON.stringify(storage.candidateList)),
+                candidateList_sort: JSON.parse(JSON.stringify(storage.candidateList_sort)),
+                prizeList: JSON.parse(JSON.stringify(storage.prizeList)),
+            };
+
+            const NowData = {
+                config: JSON.parse(JSON.stringify(state.config)),
+                candidateList: JSON.parse(JSON.stringify(state.candidateList)),
+                candidateList_sort: JSON.parse(JSON.stringify(state.candidateList_sort)),
+                prizeList: JSON.parse(JSON.stringify(state.prizeList)),
+            };
+
+            if (JSON.stringify(LSData) !== JSON.stringify(NowData)) {
+                trackJS.mixpanel('LuckyDrawLS_sync', { key: luckyDrawFocusKey, ...storage });
+                state.config = storage.config;
+                state.candidateList = storage.candidateList;
+                state.candidateList_sort = storage.candidateList_sort;
+                state.prizeList = storage.prizeList;
+                this.commit('formatHaveAwardCandidateSN');
+            }
+        }
+    },
+
+    /**
+     * 刪除抽獎活動
+     */
+    removeLuckDrawFromStorage(state, key){
+        const luckyDrawStorage = localStorage.get('luckyDrawStorage', {});
+        delete luckyDrawStorage[key];
+        localStorage.set('luckyDrawStorage', luckyDrawStorage);
+        this.commit('setLuckyDrawChooseList', []);
+    },
+
+    /**
+     * 儲存到 localStorage
+     */
+    saveToLocalStorage(state){
+        const luckyDrawStorage = localStorage.get('luckyDrawStorage', {});
+        const { luckyDrawFocusKey, config, candidateList, candidateList_sort, prizeList } = state;
+        luckyDrawStorage[luckyDrawFocusKey] = {
+            config,
+            candidateList,
+            candidateList_sort,
+            prizeList,
+        };
+        localStorage.set('luckyDrawStorage', luckyDrawStorage);
+    },
+
+    /**
+     * 設定列表
+     */
+    setConfig(state, params){
+        let config = JSON.parse(JSON.stringify(state.config));
+        config = { ...config, ...params.config };
         state.config = config;
     },
 
-    clearAllData(state, params) {
-        let defaultConfig = JSON.parse( JSON.stringify( state.defaultConfig) );
-        state.config = defaultConfig;
-        state.luckySN = [];
-        state.shortlist = [];
-        state.shortlistInput = "";
-        state.shortlist_sort = [];
+    /**
+     * 清除此抽獎活動所有資訊
+     */
+    clearAllData(state, params){
+        const defaultConfig = JSON.parse(JSON.stringify(state.defaultConfig));
+        state.config = {
+            ...defaultConfig,
+            webTitle: state.config.webTitle,
+        };
+        // state.luckySN = [];
+        // state.shortlist = [];
+        // state.shortlist_sort = [];
+        // state.prizeList = [];
+
+        state.candidateList = [];
+        state.candidateList_sort = [];
         state.prizeList = [];
+        state.focusCandidateSN = null;
+        state.focusPrizeSN = null;
+
+        this.commit('formatHaveAwardCandidateSN');
     },
 
-    triggerOpenEditListModal(state, params) {
-        state.triggerOpenEditList = new Date().getTime();
-    },
-
-    triggerOpenEditPrizeModal(state, params) {
-        state.triggerOpenPrizeList = new Date().getTime();
-    },
-
-    triggerOpenGetLuckyModal(state, params) {
-        state.triggerOpenGetLucky = new Date().getTime();
-    },
-
-    triggerOpenLuckyModal(state, params) {
-        state.triggerOpenLucky = new Date().getTime();
-    },
-
-    triggerOpenResultModal(state,params) {
-        state.triggerOpenResult = new Date().getTime();
-    },
-
-    triggerOpenSettingModal(state,params) {
-        state.triggerOpenSetting = new Date().getTime();
-    },
-
-    editShortList(state, params) {
-        let data = params.data;
-        let shortlist = JSON.parse(JSON.stringify(state.shortlist));
-        let luckySN = JSON.parse(JSON.stringify(state.luckySN));
-
-        let sn = data.sn;
-        if (data.lucky == "1") {
-            if (!luckySN.includes(sn)) {
-                luckySN.push(sn);
+    /**
+     * 開啟 Modal
+     */
+    triggerModal(state, params){
+        const { key } = params;
+        const triggerKey = `triggerOpen${key}`;
+        if (typeof state[triggerKey] !== 'undefined') {
+            if (typeof params.close === 'undefined') {
+                state[triggerKey] = new Date().getTime();
+            } else {
+                state[triggerKey] = false;
             }
-        } else {
-            let index = luckySN.indexOf(sn);
-            if (index >= 0) {
-                luckySN.splice(index, 1);
-            }
+
         }
-
-        shortlist[sn].award = data.award.split(",");
-
-        state.shortlist = shortlist;
-        state.luckySN = luckySN;
     },
 
-    setShortListInput(state, params) {
-        let shortlistInput = params.shortlistInput;
-        let shortlist = JSON.parse(JSON.stringify(state.shortlist));
-        let shortlist_sort = JSON.parse(JSON.stringify(state.shortlist_sort));
+    /**
+     * 儲存候選人列表
+     */
+    setCandidateListInput(state, params){
+        const { candidateListInput } = params;
+        let candidateList = JSON.parse(JSON.stringify(state.candidateList));
+        let candidateList_sort = JSON.parse(JSON.stringify(state.candidateList_sort));
 
 
-        let shortlistInputObj = {};
-        let shortlistInputArr = shortlistInput.split("\n").map(function(data) {
-            data = data.split("|").map(function(string) {
-                return string.trim();
-            });
-            let Obj = {
-                name: data[0],
-                pos: data[1] || "",
+        const candidateListInputObj = {};
+        candidateListInput.split('\n').map((data) => {
+            const info = data.split(',').map(text => text.trim());
+
+            const Obj = {
+                name: info[0],
+                pos: info[1] || '',
             };
             return Obj;
-        }).filter(function(data) {
-            if (!!data.name) {
-                shortlistInputObj[data.name] = data;
+        }).forEach((data) => {
+            if (data.name) {
+                candidateListInputObj[`${data.name}`] = data;
                 return !!data.name;
-            } else {
-                return false;
             }
+            return true;
         });
 
-
-        let matchName = [];
-        shortlist = shortlist.map(function(data) {
-            data.del = !!!shortlistInputObj[data.name];
-            if (!data.del) {
-                matchName.push(data.name);
-                data.pos = shortlistInputObj[data.name].pos;
-                if (!shortlist_sort.includes(data.sn)) {
-                    shortlist_sort.push(data.sn);
+        const matchName = [];
+        candidateList = candidateList.map((data) => {
+            const info = data;
+            info.del = !candidateListInputObj[info.name];
+            if (!info.del) {
+                matchName.push(info.name);
+                info.pos = candidateListInputObj[info.name].pos;
+                if (!candidateList_sort.includes(info.sn)) {
+                    candidateList_sort.push(info.sn);
                 }
             } else {
-                shortlist_sort = shortlist_sort.filter(function(sn) {
-                    return sn != data.sn;
-                });
+                candidateList_sort = candidateList_sort.filter(sn => sn !== data.sn);
             }
-            return data;
+            return info;
         });
 
-        shortlistInputArr.forEach(function(data) {
-            if (!matchName.includes(data.name)) {
-                let sn = shortlist.length;
-                shortlist.push({
-                    sn: sn,
-                    name: data.name,
-                    pos: data.pos,
+        Object.keys(candidateListInputObj).forEach((key) => {
+            const info = candidateListInputObj[key];
+            if (!matchName.includes(info.name)) {
+                const sn = string.getRandomString(10);
+                candidateList.push({
+                    sn,
+                    name: info.name,
+                    pos: info.pos,
                     award: [],
                     del: false,
                 });
-                shortlist_sort.push(sn);
+                candidateList_sort.push(sn);
+            }
+        });
+        state.candidateList = candidateList;
+        state.candidateList_sort = candidateList_sort;
+        this.commit('formatHaveAwardCandidateSN');
+    },
+
+    /**
+     * 建立亂數候選人
+     */
+    setCandidateListRandomSort(state, params){
+        const candidateList = JSON.parse(JSON.stringify(state.candidateList));
+        const candidateListSN = candidateList.filter(data => !data.del).map(data => data.sn);
+
+        const loopTime = candidateListSN.length;
+        const candidateListSN_new = [];
+        for (let i = 0; i < loopTime; i += 1) {
+            const { length } = candidateListSN;
+            const index = parseInt((Math.random() * 100) % length);
+            candidateListSN_new.push(candidateListSN[index]);
+            candidateListSN.splice(index, 1);
+        }
+
+        state.candidateList_sort = candidateListSN_new;
+    },
+
+    /**
+     * 設定候選人資訊
+     */
+    setCandidateInfo(state, params){
+        const candidateList = JSON.parse(JSON.stringify(state.candidateList));
+        let index = false;
+        candidateList.forEach((candidateInfo, candidateIndex) => {
+            if (candidateInfo.sn === params.sn) {
+                index = candidateIndex;
             }
         });
 
-        state.shortlistInput = shortlistInputArr.map(function(data) {
-            return ["name", "pos"].map(function(key) {
-                return data[key]
-            }).filter(function(value) { return !!value }).join("|");
-        }).join("\n");
-        state.shortlist = shortlist;
-        state.shortlist_sort = shortlist_sort;
-    },
-
-    setShortlistRandomSort(state, params) {
-        let shortlist = JSON.parse(JSON.stringify(state.shortlist));
-        let shortlist_sort = JSON.parse(JSON.stringify(state.shortlist_sort));
-
-        let shortlistSN = shortlist.filter(function(data) {
-            return !data.del;
-        }).map(function(data) {
-            return data.sn;
-        });
-
-        let loopTime = shortlistSN.length;
-        let shortlistSN_new = [];
-        for (let i = 0; i < loopTime; i++) {
-            let length = shortlistSN.length;
-            let index = parseInt(Math.random() * 100 % length);
-            shortlistSN_new.push(shortlistSN[index]);
-            shortlistSN.splice(index, 1);
+        if (index !== false) {
+            candidateList[index] = {
+                ...candidateList[index],
+                ...params,
+            };
         }
-        state.shortlist_sort = shortlistSN_new;
+        state.candidateList = candidateList;
     },
 
-    setFocusSN(state, params) {
-        state.focusSN = params;
+    /**
+     * 同步禮物資訊
+     */
+    syncPrizeList(state, params){
+        state.prizeList = JSON.parse(JSON.stringify(params));
     },
 
-    setFocusPrizeSN(state, params) {
+    /**
+     * 設定 focus 候選人 SN
+     */
+    setFocusCandidateSN(state, params){
+        state.focusCandidateSN = params;
+    },
+
+    /**
+     * 設定 focus 獎項 SN
+     */
+    setFocusPrizeSN(state, params){
         state.focusPrizeSN = params;
     },
 
-    setFocusSN2LuckySN(state, params) {
-        let shortlist = JSON.parse(JSON.stringify(state.shortlist));
-        let luckySN = JSON.parse(JSON.stringify(state.luckySN));
-        let focusSN = JSON.parse(JSON.stringify(state.focusSN));
+    /**
+     * 更新中獎名單
+     */
+    formatHaveAwardCandidateSN(state){
+        const ValidatePrizeSN = [];
+        const haveAwardCandidateSN = [];
 
-        let filterResult = shortlist.filter(function(data) {
-            if (data.sn == focusSN) {
-                data.award.push(params.award);
-                return true;
-            } else {
-                return false;
+        state.prizeList.forEach((item) => {
+            if (!!item && item.del === false) {
+                ValidatePrizeSN.push(item.prize_sn);
             }
         });
 
-        if (filterResult.length > 0 && !luckySN.includes(focusSN)) {
-            luckySN.push(focusSN);
-        }
-
-        state.focusSN = null;
-        state.luckySN = luckySN;
-        state.shortlist = shortlist;
-
-    },
-
-    saveNewPrize(state, params) {
-        let prizeList = JSON.parse(JSON.stringify(state.prizeList));
-        prizeList.push( params.prize );
-        state.prizeList = prizeList;
-    },
-
-    saveEditPrize(state, params) {
-        let prizeList = JSON.parse(JSON.stringify(state.prizeList));
-        let shortlist = JSON.parse(JSON.stringify(state.shortlist));
-
-        let oldPrize = prizeList[params.sn];
-        let newPrize = params.prize;
-
-        prizeList[params.sn] = params.prize;
-
-        shortlist = shortlist.map(function(data){
-            data.award = data.award.map(function(award){
-                if (award == oldPrize) {
-                    award = newPrize;
+        state.candidateList.forEach((candidateInfo) => {
+            if (candidateInfo.del === false && candidateInfo.award) {
+                let award = false;
+                candidateInfo.award.forEach((prize_sn) => {
+                    if (ValidatePrizeSN.includes(prize_sn)) {
+                        award = true;
+                    }
+                });
+                if (award === true) {
+                    haveAwardCandidateSN.push(candidateInfo.sn);
                 }
-                return award;
-            });
-            return data;
+            }
         });
 
-        state.prizeList = prizeList;
-        state.shortlist = shortlist;
+        state.haveAwardCandidateSN = haveAwardCandidateSN;
     },
-}
+
+    /**
+     * 綁定獎項與候選人
+     */
+    setFocusCandidateBindPrize(state, params){
+        const candidateList = JSON.parse(JSON.stringify(state.candidateList));
+        const { prize_sn, candidate_sn } = params;
+        let focusIndex = false;
+        candidateList.forEach((item, index) => {
+            if (candidate_sn === item.sn) {
+                focusIndex = index;
+            }
+        });
+
+        if (focusIndex !== false) {
+            candidateList[focusIndex].award.push(prize_sn);
+        }
+
+        state.focusPrizeSN = false;
+        state.focusCandidateSN = false;
+        state.candidateList = candidateList;
+        this.commit('formatHaveAwardCandidateSN');
+    },
+
+    /**
+     * 隨機建立抽獎資訊
+     */
+    createRandomLuckyDraw(state){
+        const randomCandidateNames = state.randomCandidateNames.split(',');
+        const randomCandidatePos = state.randomCandidatePos.split(',');
+        const randomPrize = state.randomPrize.split(',');
+        const randomColor = state.randomColor.split(',');
+        const randomBgImg = state.randomBgImg.split(',');
+        const randomConfig = JSON.parse(JSON.stringify(state.randomConfig));
+        const config = JSON.parse(JSON.stringify(state.config));
+
+        const getRandomCandidateName = () => {
+            const index = string.randRange(0, randomCandidateNames.length - 1);
+            const name = randomCandidateNames.splice(index, 1);
+            return name[0];
+        };
+
+        const getRandomPrize = () => {
+            const index = string.randRange(0, randomPrize.length - 1);
+            const name = randomPrize.splice(index, 1);
+            return name[0];
+        };
+
+        const getRandomColor = () => {
+            const index = string.randRange(0, randomColor.length - 1);
+            const name = randomColor.splice(index, 1);
+            return name[0];
+        };
+
+        const getRandomBgImg = () => {
+            const index = string.randRange(0, randomBgImg.length - 1);
+            const name = randomBgImg.splice(index, 1);
+            return name[0];
+        };
+
+        const getRandomCandidatePos = () => {
+            const index = string.randRange(0, randomCandidatePos.length - 1);
+            let pos = randomCandidatePos[index];
+            if (pos.includes('_o')) {
+                pos = pos.replace('_o', '');
+                randomCandidatePos.splice(index, 1);
+            }
+            return pos;
+        };
+
+        randomConfig.defaultColor = getRandomColor();
+        randomConfig.doneColor = getRandomColor();
+        randomConfig.focusColor = getRandomColor();
+        randomConfig.titleSize = string.randRange(15, 25);
+        randomConfig.subtitleSize = string.randRange(randomConfig.titleSize - 10, randomConfig.titleSize - 5);
+        randomConfig.defaultRunTime = string.randRange(10, 100);
+        randomConfig.backgroundImg = getRandomBgImg();
+        randomConfig.boxMV = string.randRange(3, 30);
+        randomConfig.boxMH = string.randRange(3, 30);
+
+        const CandidateCount = string.randRange(10, 60);
+        const candidateList = [];
+        for (let i = 0; i < CandidateCount; i++) {
+            const sn = string.getRandomString(10);
+            candidateList.push({
+                sn,
+                name: getRandomCandidateName(),
+                pos: getRandomCandidatePos(),
+                award: [],
+                del: false,
+            });
+        }
+
+        const PrizeCount = string.randRange(5, 20);
+        const prizeList = [];
+        for (let i = 0; i < PrizeCount; i++) {
+            const prize_sn = string.getRandomString(10);
+            prizeList.push({
+                prize_sn,
+                title: getRandomPrize(),
+                amount: string.randRange(1, 10),
+                del: false,
+            });
+        }
+
+        state.candidateList = candidateList;
+        state.luckyDrawIsRandom = true;
+        state.prizeList = prizeList;
+        state.config = {
+            ...config,
+            ...randomConfig,
+        };
+        this.commit('formatHaveAwardCandidateSN');
+        this.commit('setCandidateListRandomSort');
+    },
+
+
+    setIsTutorial(state, bool){
+        state.isTutorial = !!bool;
+    },
+};

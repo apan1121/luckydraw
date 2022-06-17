@@ -1,0 +1,172 @@
+
+// Base Value
+$font-size-default: 16px !default;
+
+$font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Noto Sans TC", "Noto Serif TC" !default;
+$font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-base: $font-family-sans-serif !default;
+$font-family-code: $font-family-monospace !default;
+
+$font-size-base: 1rem !default;
+$font-weight-base: 400 !default;
+$line-height-base: 1.5 !default;
+
+$font-weight-lighter: lighter !default;
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-bold: 700 !default;
+$font-weight-bolder: bolder !default;
+
+
+$small-font-size: 0.875em !default;
+$sub-sup-font-size: 0.75em !default;
+
+
+$h1-font-size: rem(40px) !default;
+$h2-font-size: rem(32px) !default;
+$h3-font-size: rem(28px) !default;
+$h4-font-size: rem(24px) !default;
+$h5-font-size: rem(20px) !default;
+$h6-font-size: rem(16px) !default;
+
+$body-font-size: rem(14px) !default;
+$footnote-font-size: rem(12px) !default;
+
+$spacer: 16px;
+
+$pipe-border: $spacer / 2;
+
+
+
+
+$font-size-map: (
+    'h1': $h1-font-size,
+    'h2': $h2-font-size,
+    'h3': $h3-font-size,
+    'h4': $h4-font-size,
+    'h5': $h5-font-size,
+    'h6': $h6-font-size,
+    'body': $body-font-size,
+    'footnote': $footnote-font-size,
+) !default;
+
+
+$white: #ffffff;
+$white-a00: rgba($white, 0);
+$white-a05: rgba($white, 0.05);
+$white-a15: rgba($white, 0.15);
+$white-a20: rgba($white, 0.2);
+$white-a30: rgba($white, 0.3);
+$white-a40: rgba($white, 0.4);
+$white-a60: rgba($white, 0.6);
+$white-a80: rgba($white, 0.8);
+
+$black: #000000;
+$black-a00: rgba($black, 0);
+$black-a05: rgba($black, 0.05);
+$black-a15: rgba($black, 0.15);
+$black-a20: rgba($black, 0.2);
+$black-a30: rgba($black, 0.3);
+$black-a40: rgba($black, 0.4);
+$black-a60: rgba($black, 0.6);
+$black-a80: rgba($black, 0.8);
+
+// Gray
+$gray-50: #f8f9fa;
+$gray-100: #f1f3f5;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #868e96;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+
+$red-100: #ffdee4;
+$red-200: #ffb6c3;
+$red-300: #fb96a9;
+$red-400: #ff6a86;
+$red-500: #e84967;
+$red-600: #db4662;
+$red-700: #cc3a55;
+$red-800: #c5304c;
+$red-a05: rgba($red-500, 0.05);
+$red-a15: rgba($red-500, 0.15);
+$red-a20: rgba($red-500, 0.2);
+$red-a30: rgba($red-500, 0.3);
+$red-a40: rgba($red-500, 0.4);
+$red-a60: rgba($red-500, 0.6);
+$red-a80: rgba($red-500, 0.8);
+
+// Green
+$green-100: #d3fddd;
+$green-200: #aff1be;
+$green-300: #94ecab;
+$green-400: #58cf78;
+$green-600: #00a03c;
+$green-500: #1eaf50;
+$green-700: #027720;
+$green-800: #00661a;
+$green-a05: rgba($green-500, 0.05);
+$green-a15: rgba($green-500, 0.15);
+$green-a20: rgba($green-500, 0.2);
+$green-a30: rgba($green-500, 0.3);
+$green-a40: rgba($green-500, 0.4);
+$green-a60: rgba($green-500, 0.6);
+$green-a80: rgba($green-500, 0.8);
+
+
+$blue-100: #dee8ff;
+$blue-200: #bfd2ff;
+$blue-300: #99b7ff;
+$blue-400: #7da3ff;
+$blue-600: #6b96ff;
+$blue-500: #5c8aff;
+$blue-700: #3b72ff;
+$blue-800: #2663ff;
+$blue-a05: rgba($blue-500, 0.05);
+$blue-a15: rgba($blue-500, 0.15);
+$blue-a20: rgba($blue-500, 0.2);
+$blue-a30: rgba($blue-500, 0.3);
+$blue-a40: rgba($blue-500, 0.4);
+$blue-a60: rgba($blue-500, 0.6);
+$blue-a80: rgba($blue-500, 0.8);
+
+
+
+
+
+// Green
+$orange-100: #ffd607;
+$orange-200: #ffd454;
+$orange-300: #ffce3a;
+$orange-400: #ffc721;
+$orange-600: #ffc107;
+$orange-500: #edb100;
+$orange-700: #d39e00;
+$orange-800: #ba8b00;
+$orange-a05: rgba($orange-500, 0.05);
+$orange-a15: rgba($orange-500, 0.15);
+$orange-a20: rgba($orange-500, 0.2);
+$orange-a30: rgba($orange-500, 0.3);
+$orange-a40: rgba($orange-500, 0.4);
+$orange-a60: rgba($orange-500, 0.6);
+$orange-a80: rgba($orange-500, 0.8);
+
+
+
+@mixin aspect-ratio($aspect-ratio) {
+    &::before {
+        content: '';
+        display: block;
+        padding-top: $aspect-ratio;
+    }
+ }
+
+
+ @mixin circle($width, $height: $width) {
+    width: $width;
+    height: $height;
+    border-radius: 50%;
+}

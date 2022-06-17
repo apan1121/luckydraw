@@ -1,0 +1,9 @@
+# Browsers that we support
+
+> 1%
+last 5 versions
+not ie <= 10
+ios >= 10
+and_chr >= 50
+maintained node versions
+not dead

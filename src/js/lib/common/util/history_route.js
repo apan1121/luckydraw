@@ -1,78 +1,77 @@
 const history_route = {
-    init: function(params) {
+    init(params){
         const that = this;
         that.popstate_callback = null;
-        if (!!params.callback){
+        if (params.callback) {
             that.popstate_callback = params.callback;
         }
 
-        that.baseUrl = location.origin;
+        that.baseUrl = window.location.origin;
         that.setLocation();
         that.setAction();
     },
-    setAction: function (){
+    setAction(){
         const that = this;
         let timer = null;
 
         window.onpopstate = function(){
             clearTimeout(timer);
-            timer = setTimeout(function(){
-                if (typeof(that.popstate_callback) == "function") {
+            timer = setTimeout(() => {
+                if (typeof (that.popstate_callback) === 'function') {
                     that.popstate_callback(that.location);
                     that.setLocation();
                 }
-            },500);
+            }, 500);
         };
-
     },
-    diffUrl: function(url){
+    diffUrl(url){
         const that = this;
-        const tmplink = document.createElement("a");
+        const tmplink = document.createElement('a');
         tmplink.href = url;
 
         const link = {
             pathname: tmplink.pathname,
             search: tmplink.search.substr(1),
             hash: tmplink.hash.substr(1),
-        }
+        };
 
         let diff = false;
-        ["pathname", "search", "hash"].forEach(function(key){
+        ['pathname', 'search', 'hash'].forEach((key) => {
             if (link[key] != that.location[key]) {
                 diff = true;
             }
         });
         return diff;
     },
-    pushState: function(state, title, url){
+    pushState(state, title, url){
         const that = this;
 
         if (that.diffUrl(url)) {
-            history.pushState(state, title, url);
+            window.history.pushState(state, title, url);
             this.setLocation();
         }
     },
-    replaceState: function(state, title, url){
-        history.replaceState(state, title, url);
+    replaceState(state, title, url){
+        window.history.replaceState(state, title, url);
         this.setLocation();
     },
-    setLocation: function (){
+    setLocation(){
         const that = this;
         this.location = {};
-        this.location.pathname = location.pathname.replace(that.baseUrl , "");
+        this.location.pathname = window.location.pathname.replace(that.baseUrl, '');
 
-        if (!!location.search) {
-            this.location.search = location.search.substr(1);
+        if (window.location.search) {
+            this.location.search = window.location.search.substr(1);
         } else {
-            this.location.search = "";
+            this.location.search = '';
         }
 
-        if (!!location.hash) {
-            this.location.hash = location.hash.substr(1);
+        if (window.location.hash) {
+            this.location.hash = window.location.hash.substr(1);
         } else {
-            this.location.hash = "";
+            this.location.hash = '';
         }
-    }
+    },
 };
 
 

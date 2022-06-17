@@ -1,0 +1,55 @@
+{
+    "compilerOptions": {
+        "noLib": false,
+        "target": "es2020",
+        // "checkJs": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "baseUrl": "./src/js/",
+        "paths": {
+            "App": [
+                "app/*",
+            ],
+            "app$": [
+                "app/app.js",
+            ],
+            "vendor/*": [
+                "vendor/*",
+            ],
+            "lib/*": [
+                "lib/*",
+            ],
+        },
+
+        "module": "commonjs",
+        "allowJs": true,
+        "jsx": "react",
+        "declaration": true,
+        "outDir": "./dist/js",
+        "sourceMap": true,
+        "removeComments": true,
+        "noEmit": true,
+        "importHelpers": true,
+
+        "moduleResolution": "node",
+        "rootDir": "./",
+        "rootDirs": [],
+        "typeRoots": [
+            "./node_modules/@types",
+        ],
+        "types": [],
+        "skipDefaultLibCheck": true,
+    },
+    "include": [
+        "./src/js/**/*",
+        // "./resources/src/js/app/**/*",
+        // "./resources/src/js/lib/**/*",
+    ],
+    "exclude": [
+        "node_modules",
+        "**/node_modules/*",
+        "bower_components",
+        "dist",
+        ".vscode",
+    ],
+}

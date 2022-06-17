@@ -1,0 +1,271 @@
+@import "../common/variable";
+
+@keyframes ClickBubbleAnimate {
+    from {
+        width: $spacer / 2;
+        height: $spacer / 2;
+    }
+    to {
+        width: $spacer * 1.5;
+        height: $spacer * 1.5;
+    }
+}
+
+body{
+    &.tutorial-relative{
+        position: relative;
+        overflow: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .tutorial-box{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 2000;
+        width: 100vw;
+        height: 100vh;
+        .tutorial-mask{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            display: none;
+            width: 0;
+            height: 0;
+            box-shadow: rgba(33, 33, 33, 0.5) 0px 0px 0px 5000px;
+            // transition: top 0.2s, left 0.2s, width 0.2s, height 0.2s;
+            &.show{
+                // box-shadow: rgba(33, 33, 33, 0.8) 0px 0px 1px 2px;
+                z-index: 1;
+                display: block;
+                box-shadow: rgba(33, 33, 33, 0.5) 0px 0px 0px 5000px;
+            }
+            &.show-empty{
+                z-index: 1;
+                display: block;
+            }
+            &.pointer{
+                position: relative;
+                cursor: pointer;
+                &:before{
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    z-index: 10;
+                    width: $spacer * 2;
+                    height: $spacer * 2;
+                    border-radius: 50%;
+                    background: rgba($gray-700, 0.15);
+                    content: '';
+                    transform: translate(-50%, -50%);
+                }
+                &:after{
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    z-index: 12;
+                    width: $spacer / 2;
+                    height: $spacer / 2;
+                    border-radius: 50%;
+                    background: rgba($gray-700, 0.3);
+                    content: '';
+                    transform: translate(-50%, -50%);
+                    animation-name: ClickBubbleAnimate;
+                    animation-duration: 1.5s;
+                    animation-iteration-count: infinite;
+                }
+            }
+        }
+
+        .tutorial-intro{
+            position: absolute;
+            z-index: 2;
+            filter: drop-shadow(0 2px 6px  rgba(0, 0, 0, 0.25));
+
+            &[direction="center"]{
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                .tutorial-intro-wrapper{
+                    .tutorial-intro-arrow{
+                        display: none;
+                    }
+                }
+            }
+
+            &[direction="top"] {
+                top: 100px;
+                left: 100px;
+                .tutorial-intro-wrapper{
+                    .tutorial-intro-arrow{
+                        top: $spacer * -0.75;
+                        left: 50%;
+                        display: inline-block;
+                    }
+                }
+            }
+
+            &[direction="bottom"] {
+                top: 100px;
+                left: 100px;
+                .tutorial-intro-wrapper{
+                    .tutorial-intro-arrow{
+                        bottom: $spacer * -0.75;
+                        left: 50%;
+                        display: inline-block;
+                        transform: rotate(180deg);
+                    }
+                }
+            }
+
+            &[direction="right"] {
+                top: 100px;
+                left: 100px;
+                .tutorial-intro-wrapper{
+                    .tutorial-intro-arrow{
+                        top: 50%;
+                        right: $spacer * -0.375;
+                        display: inline-block;
+                        transform: rotate(90deg);
+                    }
+                }
+            }
+
+            &[direction="left"] {
+                top: 100px;
+                left: 100px;
+                .tutorial-intro-wrapper{
+                    .tutorial-intro-arrow{
+                        top: 50%;
+                        left: $spacer * -0.375;
+                        display: inline-block;
+                        transform: rotate(-90deg);
+                    }
+                }
+            }
+
+            .tutorial-intro-wrapper{
+                position: relative;
+                .tutorial-intro-exit{
+                    position: absolute;
+                    top: $spacer * 0.25;
+                    right: $spacer * 0.75;
+                    font-size: $spacer * 0.75;
+                    padding: $spacer * 0.25;
+                    cursor: pointer;
+                    @media (hover: hover) {
+                        &:hover{
+                            color: $gray-800;
+                        }
+                    }
+                }
+                .tutorial-intro-arrow{
+                    position: absolute;
+                    display: none;
+                    &:after{
+                        display: inline-block;
+                        width: $spacer * 0.75;
+                        height: $spacer * 0.75;
+                        border-top: 2px solid $gray-700;
+                        border-right: 2px solid $gray-700;
+                        background: $gray-100;
+                        content: '';
+                        transform: rotate(-45deg);
+                    }
+                }
+                .tutorial-intro-box{
+                    display: none;
+                    align-items: stretch;
+                    flex-direction: column;
+                    padding: $spacer * 0.5 0;
+                    min-height: $spacer * 6;
+                    max-height: calc(100vh - 20px);
+                    width: $spacer * 18;
+                    border: 2px solid $gray-700;
+                    border-radius: $spacer * 0.25;
+                    // background: $white;
+                    background: $gray-100;
+                    &.show{
+                        display: flex;
+                    }
+                    .tutorial-intro-box-title:not(:empty){
+                        overflow: hidden;
+                        flex: none;
+                        margin-bottom: $spacer * 0.5;
+                        padding: 0 $spacer * 0.5;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        font-weight: 700;
+                        font-size: $spacer ;
+                    }
+                    .tutorial-intro-box-content{
+                        overflow: auto;
+                        flex: 1;
+                        margin-bottom: $spacer * 0.5;
+                        padding: 0 $spacer * 0.5;
+                        max-height: 150px;
+                        color: $gray-800;
+                        font-size: $spacer * 0.85;
+                    }
+                    .tutorial-intro-box-tools{
+                        display: flex;
+                        align-items: stretch;
+                        flex: none;
+                        justify-content: flex-end;
+                        padding: 0 $spacer * 0.5;
+                        .tutorial-intro-box-tools-pager{
+                            display: block;
+                            flex: 1;
+                            margin: 0px $spacer * 0.5;
+                            color: $gray-600;
+                            font-size: $spacer * 0.75;
+
+                            user-select: none;
+                        }
+                        .tutorial-intro-box-tools-skip{
+                            margin: 0px $spacer * 0.5;
+                            cursor: pointer;
+
+                            user-select: none;
+                        }
+
+                        .tutorial-intro-box-tools-prev{
+                            margin: 0px $spacer * 0.5;
+
+                            user-select: none;
+                            &:not(.disabled){
+                                cursor: pointer;
+                                @media (hover: hover) {
+                                    &:hover{
+                                        color: $gray-800;
+                                    }
+                                }
+                            }
+                            &.disabled{
+                                opacity: 0.3;
+                                pointer-events: none;
+                            }
+                        }
+                        .tutorial-intro-box-tools-next{
+                            margin: 0px $spacer * 0.5;
+
+                            user-select: none;
+                            &:not(.disabled){
+                                cursor: pointer;
+                                @media (hover: hover) {
+                                    &:hover{
+                                        color: $gray-800;
+                                    }
+                                }
+                            }
+                            &.disabled{
+                                opacity: 0.3;
+                                pointer-events: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Lucky Draw 開獎機</title>
+    <meta name='author' content='Byron.Chen' />
+    <meta name='apple-mobile-web-app-title' content='Lucky Draw' />
+    <meta name='apple-mobile-web-app-capable' content='yes' />
+    <meta name='apple-touch-fullscreen' content='yes' />
+    <meta name='apple-mobile-web-app-status-bar-style' content='black' />
+    <meta name='mobile-web-app-capable' content='yes' />
+    <meta name='description' content='一個方便的抽獎系統' />
+    <link rel="icon" href="./dist/img/icon-box.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./dist/css/page/page.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <script src="./dist/js/chunk/node_modules.bundle.js"></script>
+</head>
+<body>
+    <div id="appBox" cz-shortcut-listen="true" style="padding-top: 4.0rem;">
+        <header-bar-box inline-template>
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top" v-bind:style="{ 'background-color' :config.headerColor }">
+                <a class="navbar-brand" href="#">
+                    <i class="icon-power"></i>
+                    {{config.webTitle || "Lucky Draw"}}
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" v-on:click="editShortlist">
+                                <i class="fas fa-user-edit"></i>
+                                候選名單
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" v-on:click="editPrizeList">
+                                <i class="fas fa-award"></i>
+                                獎項名單
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" v-on:click="getLucky">
+                                <i class="fas fa-vote-yea"></i>
+                                抽一把
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" v-on:click="showResult">
+                                <i class="fas fa-poll"></i>
+                                顯示抽獎結果
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav justify-content-end">
+                        <li class="nav-item">
+                            <a class="nav-link" v-on:click="showSetting">
+                                <i class="fas fa-cog"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header-bar-box>
+        <main style="padding: 0px 10px">
+            <div class="shortlist-box" v-if="shortlistBySort.length > 0">
+                <transition-group name="shortlist" class="shortlist" tag="div" enter-active-class="fadeInUp" leave-active-class="fadeOutDown">
+                    <candidate-box v-for="(candidateInfo, candidateIndex) in shortlistBySort" :key="candidateInfo.sn" v-bind:candidate-index="candidateIndex" v-bind:candidate-info="candidateInfo"></candidate-box>
+                </transition-group>
+            </div>
+            <div class="shortlist-empty-box" v-else>
+            </div>
+        </main>
+        <edit-list-modal></edit-list-modal>
+        <prize-list-modal></prize-list-modal>
+        <get-lucky-modal></get-lucky-modal>
+        <lucky-modal></lucky-modal>
+        <result-modal></result-modal>
+        <setting-modal></setting-modal>
+        <div v-if="config.backgroundImg" class="bg-img"
+            v-bind:style="{
+                'background-image': 'url(' + config.backgroundImg + ')',
+                opacity: config.backgroundOpacity,
+            }"
+        ></div>
+    </div>
+
+
+    <!-- start Mixpanel --><script type="text/javascript">(function(c,a){if(!a.__SV){var b=window;try{var d,m,j,k=b.location,f=k.hash;d=function(a,b){return(m=a.match(RegExp(b+"=([^&]*)")))?m[1]:null};f&&d(f,"state")&&(j=JSON.parse(decodeURIComponent(d(f,"state"))),"mpeditor"===j.action&&(b.sessionStorage.setItem("_mpcehash",f),history.replaceState(j.desiredHash||"",c.title,k.pathname+k.search)))}catch(n){}var l,h;window.mixpanel=a;a._i=[];a.init=function(b,d,g){function c(b,i){var a=i.split(".");2==a.length&&(b=b[a[0]],i=a[1]);b[i]=function(){b.push([i].concat(Array.prototype.slice.call(arguments,
+    0)))}}var e=a;"undefined"!==typeof g?e=a[g]=[]:g="mixpanel";e.people=e.people||[];e.toString=function(b){var a="mixpanel";"mixpanel"!==g&&(a+="."+g);b||(a+=" (stub)");return a};e.people.toString=function(){return e.toString(1)+".people (stub)"};l="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+    for(h=0;h<l.length;h++)c(e,l[h]);var f="set set_once union unset remove delete".split(" ");e.get_group=function(){function a(c){b[c]=function(){call2_args=arguments;call2=[c].concat(Array.prototype.slice.call(call2_args,0));e.push([d,call2])}}for(var b={},d=["get_group"].concat(Array.prototype.slice.call(arguments,0)),c=0;c<f.length;c++)a(f[c]);return b};a._i.push([b,d,g])};a.__SV=1.2;b=c.createElement("script");b.type="text/javascript";b.async=!0;b.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?
+    MIXPANEL_CUSTOM_LIB_URL:"file:"===c.location.protocol&&"//cdn4.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn4.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn4.mxpnl.com/libs/mixpanel-2-latest.min.js";d=c.getElementsByTagName("script")[0];d.parentNode.insertBefore(b,d)}})(document,window.mixpanel||[]);
+    mixpanel.init("e818d1efef8be95682556e71500dad87");</script><!-- end Mixpanel -->
+
+
+    <script src="./dist/js/app/index.bundle.js"></script>
+
+
+</body>
+</html>
