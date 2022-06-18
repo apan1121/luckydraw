@@ -114,10 +114,12 @@ export default {
         const that = this;
         $(that.$refs.box).bind('shown.bs.modal', () => {
             trackJS.mixpanel('LuckyDrawStorageOpen_click');
+            trackJS.gtag('event', 'LuckyDrawStorageOpen_click');
         });
 
         $(that.$refs.box).bind('hidden.bs.modal', () => {
             trackJS.mixpanel('LuckyDrawStorageClose_click');
+            trackJS.gtag('event', 'LuckyDrawStorageClose_click');
         });
     },
     updated(){},
@@ -133,6 +135,7 @@ export default {
             const that = this;
             const luckyDrawChoose = that.luckyDrawChooseList[index];
             trackJS.mixpanel('LuckyDrawStorageActionChoose_click', luckyDrawChoose);
+            trackJS.gtag('event', 'LuckyDrawStorageActionChoose_click', luckyDrawChoose);
             that.chooseLuckDrawFromStorage(luckyDrawChoose.key);
         },
         removeLuckDraw(index){
@@ -143,6 +146,7 @@ export default {
             }, () => {
                 that.removeLuckDrawFromStorage(luckyDrawChoose.key);
                 trackJS.mixpanel('LuckyDrawStorageActionRemove_click', luckyDrawChoose);
+                trackJS.gtag('event', 'LuckyDrawStorageActionRemove_click', luckyDrawChoose);
             });
         },
         create(){
@@ -152,6 +156,7 @@ export default {
             };
             that.createDefaultLuckyDraw(parmas);
             trackJS.mixpanel('LuckyDrawStorageActionCreate_click', parmas);
+            trackJS.gtag('event', 'LuckyDrawStorageActionCreate_click', parmas);
         },
     },
 };

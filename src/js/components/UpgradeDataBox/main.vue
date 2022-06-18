@@ -44,6 +44,7 @@ export default {
         const that = this;
         $(that.$refs.box).bind('shown.bs.modal', () => {
             trackJS.mixpanel('UpgradeDataOpen_click');
+            trackJS.gtag('event', 'UpgradeDataOpen_click');
             const waitSec = string.randRange(2, 3);
             setTimeout(() => {
                 that.upgradeLuckyDrawData();
@@ -53,6 +54,7 @@ export default {
 
         $(that.$refs.box).bind('hidden.bs.modal', () => {
             trackJS.mixpanel('UpgradeDataClose_click');
+            trackJS.gtag('event', 'UpgradeDataClose_click');
         });
 
         $(that.$refs.box).modal('show');

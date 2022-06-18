@@ -304,6 +304,7 @@ export default {
                 clearTimeout(that.mixpanelTrackerTimer);
                 that.mixpanelTrackerTimer = setTimeout(() => {
                     trackJS.mixpanel('SettingTry_click', that.config);
+                    trackJS.gtag('event', 'SettingTry_click', that.config);
                 }, 2000);
             },
         },
@@ -317,11 +318,13 @@ export default {
             that.orgInput = { ...that.orgInput, ...config };
 
             trackJS.mixpanel('SettingOpen_click');
+            trackJS.gtag('event', 'SettingOpen_click');
         });
 
 
         $(that.$refs.box).bind('hidden.bs.modal', () => {
             trackJS.mixpanel('SettingClose_click');
+            trackJS.gtag('event', 'SettingClose_click');
         });
         $(that.$refs.box).modal('show');
     },
@@ -342,6 +345,7 @@ export default {
             }, () => {
                 that.clearAllData();
                 trackJS.mixpanel('SettingClearAll_click');
+                trackJS.gtag('event', 'SettingClearAll_click');
                 $(that.$refs.box).modal('hide');
             }, () => {
 
@@ -354,6 +358,7 @@ export default {
             };
             that.setConfig(params);
             trackJS.mixpanel('SettingCancel_click');
+            trackJS.gtag('event', 'SettingCancel_click');
             $(that.$refs.box).modal('hide');
         },
         save(){
@@ -362,6 +367,7 @@ export default {
                 config: that.input,
             };
             trackJS.mixpanel('SettingSave_click', that.config);
+            trackJS.gtag('event', 'SettingSave_click', that.config);
             $(that.$refs.box).modal('hide');
         },
         getBgImg(){

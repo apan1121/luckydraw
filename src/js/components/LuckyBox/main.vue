@@ -108,6 +108,7 @@ export default {
              */
             that.setFavicon('award');
             trackJS.mixpanel('LuckyOpen_click', { candidate: that.focusCandidateInfo, prize: that.focusPrizeInfo });
+            trackJS.gtag('event', 'LuckyOpen_click', { candidate: that.focusCandidateInfo, prize: that.focusPrizeInfo });
         });
         $(that.$refs.box).bind('hidden.bs.modal', () => {
             /**
@@ -115,6 +116,7 @@ export default {
              */
             that.setFavicon('default');
             trackJS.mixpanel('LuckyClose_click');
+            trackJS.gtag('event', 'LuckyClose_click');
         });
         $(that.$refs.box).modal('show');
     },
@@ -133,12 +135,14 @@ export default {
                 candidate_sn: that.focusCandidateSN,
             };
             trackJS.mixpanel('LuckyConfirm_click', { candidate: that.focusCandidateInfo, prize: that.focusPrizeInfo });
+            trackJS.gtag('event', 'LuckyConfirm_click', { candidate: that.focusCandidateInfo, prize: that.focusPrizeInfo });
             that.setFocusCandidateBindPrize(params);
             $(that.$refs.box).modal('hide');
         },
         cancel(){
             const that = this;
             trackJS.mixpanel('LuckyCancel_click', { candidate: that.focusCandidateInfo, prize: that.focusPrizeInfo });
+            trackJS.gtag('event', 'LuckyCancel_click', { candidate: that.focusCandidateInfo, prize: that.focusPrizeInfo });
         },
     },
 };

@@ -182,10 +182,12 @@ export default {
             // mixpanel.track('open result');
             that.formatResultList();
             trackJS.mixpanel('ResultOpen_click');
+            trackJS.gtag('event', 'ResultOpen_click');
         });
 
         $(that.$refs.box).bind('hidden.bs.modal', () => {
             trackJS.mixpanel('ResultClose_click');
+            trackJS.gtag('event', 'ResultClose_click');
         });
 
         $(that.$refs.download).bind('shown.bs.modal', () => {
@@ -247,6 +249,7 @@ export default {
         },
         openEdit(candidateInfo){
             trackJS.mixpanel('ResultEdit_click', candidateInfo);
+            trackJS.gtag('event', 'ResultEdit_click', candidateInfo);
             this.editCandidateInfo = candidateInfo;
         },
         save(){
@@ -279,6 +282,7 @@ export default {
             that.editCandidateInfo = false;
             that.formatResultList();
             trackJS.mixpanel('ResultEditSave_click', params);
+            trackJS.gtag('event', 'ResultEditSave_click', params);
         },
         download(){
             const that = this;
@@ -307,7 +311,8 @@ export default {
                 document.body.appendChild(link); // Required for FF
                 link.click();
 
-                trackJS.mixpanel('ResultDownload_click', csv);
+                trackJS.mixpanel('ResultDownload_click', { csv });
+                trackJS.gtag('event', 'ResultDownload_click', { csv });
 
                 $(that.$refs.box).modal('show');
                 $(that.$refs.download).modal('hide');

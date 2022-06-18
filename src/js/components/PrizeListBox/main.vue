@@ -174,10 +174,12 @@ export default {
             that.editPrizeInfo = null;
 
             trackJS.mixpanel('PrizeListOpen_click');
+            trackJS.gtag('event', 'PrizeListOpen_click');
         });
 
         $(that.$refs.box).bind('hidden.bs.modal', () => {
             trackJS.mixpanel('PrizeListClose_click');
+            trackJS.gtag('event', 'PrizeListClose_click');
         });
 
         if (this.triggerOpenPrizeList) {
@@ -219,6 +221,7 @@ export default {
                     that.addNewFlag = false;
 
                     trackJS.mixpanel('PrizeListAdd_click', params);
+                    trackJS.gtag('event', 'PrizeListAdd_click', params);
                 } else {
                     popup.warning({
                         html: '已有相同的獎項',
@@ -262,6 +265,7 @@ export default {
 
                     that.inputPrizeList = inputPrizeList;
                     trackJS.mixpanel('PrizeListEditSave_click', editPrizeInfo);
+                    trackJS.gtag('event', 'PrizeListEditSave_click', editPrizeInfo);
                     that.editPrizeInfo = null;
                 } else {
                     popup.warning({
@@ -285,6 +289,7 @@ export default {
                 if (focus_index !== false) {
                     inputPrizeList[focus_index].del = true;
                     trackJS.mixpanel('PrizeListEditDel_click', inputPrizeList[focus_index]);
+                    trackJS.gtag('event', 'PrizeListEditDel_click', inputPrizeList[focus_index]);
                 }
                 that.inputPrizeList = inputPrizeList;
             });
@@ -293,6 +298,7 @@ export default {
             const that = this;
             const inputPrizeList = JSON.parse(JSON.stringify(that.inputPrizeList));
             trackJS.mixpanel('PrizeListSort_trigger', inputPrizeList);
+            trackJS.gtag('event', 'PrizeListSort_trigger', inputPrizeList);
         },
     },
 };

@@ -18,13 +18,13 @@ const main = {
             }
         }
     },
-    gtag(action, event, data){
+    gtag(event, action, data){
         // console.log('gtag', action, event, data);
         if (!!window.gtag) {
             if (!!data) {
-                window.gtag(action, event, data);
+                window.gtag(event, action, data);
             } else {
-                window.gtag(action, event);
+                window.gtag(event, action);
             }
         }
     },

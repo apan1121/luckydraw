@@ -106,10 +106,12 @@ export default {
             candidateListTextarea = candidateListTextarea.join('\n');
             that.candidateListTextarea = candidateListTextarea;
             trackJS.mixpanel('CandidateListOpen_click');
+            trackJS.gtag('event', 'CandidateListOpen_click');
         });
 
         $(that.$refs.box).bind('hidden.bs.modal', () => {
             trackJS.mixpanel('CandidateListClose_click');
+            trackJS.gtag('event', 'CandidateListClose_click');
         });
 
         if (that.triggerOpenCandidateList) {
@@ -132,12 +134,14 @@ export default {
             };
             that.setCandidateListInput(params);
             trackJS.mixpanel('CandidateListSave_click', that.candidateList);
+            trackJS.gtag('event', 'CandidateListSave_click', that.candidateList);
             $(that.$refs.box).modal('hide');
         },
         randomSort(){
             const that = this;
             that.setCandidateListRandomSort();
             trackJS.mixpanel('CandidateListRandom_click', that.candidateList_sort);
+            trackJS.gtag('event', 'CandidateListRandom_click', that.candidateList_sort);
         },
     },
 };

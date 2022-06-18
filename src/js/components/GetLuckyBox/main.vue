@@ -113,9 +113,11 @@ export default {
         $(that.$refs.box).bind('shown.bs.modal', () => {
             that.award = '';
             trackJS.mixpanel('GetLuckyOpen_click');
+            trackJS.gtag('event', 'GetLuckyOpen_click');
         });
         $(that.$refs.box).bind('hidden.bs.modal', () => {
             trackJS.mixpanel('GetLuckyClose_click');
+            trackJS.gtag('event', 'GetLuckyClose_click');
         });
 
         if (that.triggerOpenGetLucky) {
@@ -141,6 +143,7 @@ export default {
         getLucky(prizeInfo){
             const that = this;
             trackJS.mixpanel('GetLuckyChoosePrize_click', prizeInfo);
+            trackJS.gtag('event', 'GetLuckyChoosePrize_click', prizeInfo);
             if (prizeInfo.count <= prizeInfo.amount) {
                 const { haveAwardCandidateSN } = that;
                 const ValidateCandidateSN = [];
@@ -159,17 +162,20 @@ export default {
 
                     that.runTime = that.config.defaultRunTime;
                     trackJS.mixpanel('GetLuckyChoosePrizeRun_trigger', prizeInfo);
+                    trackJS.gtag('event', 'GetLuckyChoosePrizeRun_trigger', prizeInfo);
                     that.setFocusCandidateSN(null);
                     that.setFocusPrizeSN(prizeInfo.prize_sn);
                     that.luckyAction();
                 } else {
                     trackJS.mixpanel('GetLuckyChoosePrizeError_trigger', { error: 'no candidate' });
+                    trackJS.gtag('event', 'GetLuckyChoosePrizeError_trigger', { error: 'no candidate' });
                     popup.warning({
                         html: '無候選人可以抽',
                     });
                 }
             } else {
                 trackJS.mixpanel('GetLuckyChoosePrizeError_trigger', { error: 'not enough' });
+                trackJS.gtag('event', 'GetLuckyChoosePrizeError_trigger', { error: 'not enough' });
                 popup.warning({
                     html: '此獎項沒有足夠的數量',
                 });
@@ -200,6 +206,7 @@ export default {
             } else {
                 setTimeout(() => {
                     trackJS.mixpanel('GetLuckyChoosePrizeStop_trigger');
+                    trackJS.gtag('event', 'GetLuckyChoosePrizeStop_trigger');
                     that.triggerModal({ key: 'Lucky' });
                     const index = parseInt((Math.random() * 10) % audio.winner.length);
                     audio.winner[index].play();

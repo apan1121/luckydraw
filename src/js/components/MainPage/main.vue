@@ -164,6 +164,7 @@ export default {
             const that = this;
             that.setFavicon('default');
             trackJS.mixpanel('LuckyDraw_view', {});
+            trackJS.gtag('event', 'page_view');
             that.initSystem();
 
             /**
@@ -198,9 +199,16 @@ export default {
                 candidateList_sort: JSON.parse(JSON.stringify(that.candidateList_sort)),
                 prizeList: JSON.parse(JSON.stringify(that.prizeList)),
             });
+            trackJS.gtag('event', 'LuckyDrawRandom_click', {
+                config: JSON.parse(JSON.stringify(that.config)),
+                candidateList: JSON.parse(JSON.stringify(that.candidateList)),
+                candidateList_sort: JSON.parse(JSON.stringify(that.candidateList_sort)),
+                prizeList: JSON.parse(JSON.stringify(that.prizeList)),
+            });
         },
         gotoDemoVideo(){
             trackJS.mixpanel('LuckyDrawDemoVideo_click');
+            trackJS.gtag('event', 'LuckyDrawDemoVideo_click');
         },
         triggerRandomTutorial(){
             const that = this;
@@ -213,13 +221,16 @@ export default {
                     startCallback(){
                         that.setIsTutorial(true);
                         trackJS.mixpanel('TutorialStart_trigger', { type: 'RandomTutorial' });
+                        trackJS.gtag('event', 'TutorialStart_trigger', { type: 'RandomTutorial' });
                     },
                     closeCallback(){
                         that.setIsTutorial(false);
                         trackJS.mixpanel('TutorialEnd_trigger', { type: 'RandomTutorial' });
+                        trackJS.gtag('event', 'TutorialEnd_trigger', { type: 'RandomTutorial' });
                     },
                     step_callback(node, IntroInfo){
                         trackJS.mixpanel('TutorialStep_trigger', { type: 'RandomTutorial', index: IntroInfo.index });
+                        trackJS.gtag('event', 'TutorialStep_trigger', { type: 'RandomTutorial', index: IntroInfo.index  });
                     },
                 };
                 const step = [
@@ -343,13 +354,16 @@ export default {
                 startCallback(){
                     that.setIsTutorial(true);
                     trackJS.mixpanel('TutorialStart_trigger', { type: 'Tutorial' });
+                    trackJS.gtag('event', 'TutorialStart_trigger', { type: 'Tutorial' });
                 },
                 closeCallback(){
                     that.setIsTutorial(false);
                     trackJS.mixpanel('TutorialEnd_trigger', { type: 'Tutorial' });
+                    trackJS.gtag('event', 'TutorialEnd_trigger', { type: 'Tutorial' });
                 },
                 step_callback(node, IntroInfo){
                     trackJS.mixpanel('TutorialStep_trigger', { type: 'Tutorial', index: IntroInfo.index });
+                    trackJS.gtag('event', 'TutorialStep_trigger', { type: 'Tutorial', index: IntroInfo.index  });
                 },
             };
 
