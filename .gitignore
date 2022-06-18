@@ -3,7 +3,7 @@
 /vendor/
 package-lock.json
 composer.lock
-/dist
+/dist/*
 /config/config.php
 
 
