@@ -68,7 +68,7 @@ fs.writeFileSync(`${PUBLIC_DIR}/.gitignore`, PUBLIC_GITIGNORE_CONTENT);
 
 
 /** 在 public 中建立 js css img */
-const PUBLIC_DEFAULT_FOLDER = ['', 'js', 'css', 'img'];
+const PUBLIC_DEFAULT_FOLDER = ['', 'js', 'css', 'img', 'mp3'];
 PUBLIC_DEFAULT_FOLDER.forEach((keyName) => {
     const DIR = path.resolve(__dirname, `${PUBLIC_DIR}/${keyName}`);
     if (!fs.existsSync(DIR)) {
@@ -92,8 +92,13 @@ if (1) {
     // const JS_VENDOR_DIR = path.resolve(__dirname, '../src/js/vendor/');
     // const JS_VENDOR_PUBLIC_DIR = path.resolve(__dirname, `${PUBLIC_DIR}/js/vendor/`);
 
+
+    const MP3_DIR = path.resolve(__dirname, '../src/mp3');
+    const MP3_PUBLIC_DIR = path.resolve(__dirname, `${PUBLIC_DIR}/mp3`);
+
     const copyEntry = {};
     copyEntry[IMG_DIR] = IMG_DIR_PUBLIC;
+    copyEntry[MP3_DIR] = MP3_PUBLIC_DIR;
     // copyEntry[ICOMOON_FONT_DIR] = ICOMOON_FONT_PUBLIC_DIR;
     // copyEntry[CSS_VENDOR_DIR] = CSS_VENDOR_PUBLIC_DIR;
     // copyEntry[JS_VENDOR_DIR] = JS_VENDOR_PUBLIC_DIR;
