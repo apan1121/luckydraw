@@ -17,25 +17,35 @@
                     ></candidate-box>
                 </transition-group>
             </div>
-            <div v-else class="shortlist-empty-box">
-                <div class="shortlist-empty-info text-left">
-                    <p>
-                        尚未建立抽獎名單 <br>
-                        您可以：
-                    </p>
-                    <ol>
-                        <li class="mb-2">
-                            <a href="javascript:;" @click="editCandidateList">輸入抽獎名單</a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="javascript:;" @click="triggerTutorial">觀看教學導覽</a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="javascript:;" @click="createRandomLuckyDrawAct">隨機建立範例測試</a>
-                        </li>
-                    </ol>
+            <template v-else>
+                <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                    <i class="fas fa-bullhorn"></i> 這是一個方便的免費線上抽獎程式，無論您是 FB IG 粉絲團行銷抽獎活動、公司年度春酒尾牙現場抽獎抽獎，或是活動聚會節慶抽獎都能符合您的需求，簡單易上手的輸入介面讓你可以快速來一場刺激又公平的抽獎活動。
+                    <button type="button" class="close" data-dismiss="alert"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </div>
+                <div class="shortlist-empty-box">
+                    <div class="shortlist-empty-info text-left">
+                        <p>
+                            尚未建立抽獎名單 <br>
+                            您可以：
+                        </p>
+                        <ol>
+                            <li class="mb-2">
+                                <a href="javascript:;" @click="editCandidateList">輸入抽獎名單</a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="javascript:;" @click="triggerTutorial">觀看教學導覽</a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="javascript:;" @click="createRandomLuckyDrawAct">隨機建立範例測試</a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </template>
         </main>
 
         <div v-if="config.backgroundImg" class="bg-img"
@@ -230,7 +240,7 @@ export default {
                     },
                     step_callback(node, IntroInfo){
                         trackJS.mixpanel('TutorialStep_trigger', { type: 'RandomTutorial', index: IntroInfo.index });
-                        trackJS.gtag('event', 'TutorialStep_trigger', { type: 'RandomTutorial', index: IntroInfo.index  });
+                        trackJS.gtag('event', 'TutorialStep_trigger', { type: 'RandomTutorial', index: IntroInfo.index });
                     },
                 };
                 const step = [
@@ -363,7 +373,7 @@ export default {
                 },
                 step_callback(node, IntroInfo){
                     trackJS.mixpanel('TutorialStep_trigger', { type: 'Tutorial', index: IntroInfo.index });
-                    trackJS.gtag('event', 'TutorialStep_trigger', { type: 'Tutorial', index: IntroInfo.index  });
+                    trackJS.gtag('event', 'TutorialStep_trigger', { type: 'Tutorial', index: IntroInfo.index });
                 },
             };
 
