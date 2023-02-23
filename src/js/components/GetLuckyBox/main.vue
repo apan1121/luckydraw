@@ -82,6 +82,7 @@ export default {
 
             defaultRunTime: 50,
             runTime: 0,
+            orgRunTime: 0,
         };
     },
     computed: {
@@ -161,6 +162,7 @@ export default {
                     $(that.$refs.box).modal('hide');
 
                     that.runTime = that.config.defaultRunTime;
+                    that.orgRunTime = that.config.defaultRunTime;
                     trackJS.mixpanel('GetLuckyChoosePrizeRun_trigger', prizeInfo);
                     trackJS.gtag('event', 'GetLuckyChoosePrizeRun_trigger', prizeInfo);
                     that.setFocusCandidateSN(null);
@@ -190,12 +192,17 @@ export default {
             const { getLuckyWaitTimeArr } = that;
             if (that.runTime > 0 && that.ValidateCandidateSN.length > 1) {
                 let waitTime = 0;
-                for (const index in getLuckyWaitTimeArr) {
-                    if (that.runTime >= getLuckyWaitTimeArr[index].limit) {
-                        waitTime = getLuckyWaitTimeArr[index].wait;
-                        break;
+                if (that.orgRunTime < 10) {
+                    waitTime = 100;
+                } else {
+                    for (const index in getLuckyWaitTimeArr) {
+                        if (that.runTime >= getLuckyWaitTimeArr[index].limit) {
+                            waitTime = getLuckyWaitTimeArr[index].wait;
+                            break;
+                        }
                     }
                 }
+                console.log('waitTime', waitTime);
                 that.runTime -= 1;
                 clearTimeout(that.luckyActionTimer);
                 that.luckyActionTimer = setTimeout(() => {
