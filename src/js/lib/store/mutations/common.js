@@ -156,7 +156,10 @@ export default {
             const { config, candidateList, candidateList_sort, prizeList } = luckyDrawStorage[key];
 
             state.luckyDrawFocusKey = key;
-            state.config = config;
+            state.config = {
+                ...config,
+                isTutorial: false,
+            };
             state.candidateList = candidateList;
             state.candidateList_sort = candidateList_sort;
             state.prizeList = prizeList;

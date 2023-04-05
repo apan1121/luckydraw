@@ -17,7 +17,11 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="get-lucky-list">
+                    <div v-if="needSetWebTitle" role="alert" class="alert alert-primary" style="flex: 0 0 auto;">
+                        請先設定屬於您的抽獎活動名稱
+                        <button class="btn btn-success btn-sm" @click="gotoSetWebTitle">立刻去</button>
+                    </div>
+                    <div class="get-lucky-list" :class="{ disabled: needSetWebTitle }">
                         <template v-if="prizeListByAward.length > 0">
                             <button v-for="prizeInfo in prizeListByAward"
                                 :key="prizeInfo.prize_sn"
@@ -94,6 +98,14 @@ export default {
             'haveAwardCandidateSN',
             'getLuckyWaitTimeArr',
         ]),
+        needSetWebTitle(){
+            const that = this;
+            let needSetWebTitle = false;
+            if (!that.config.isTutorial && (!that.config.webTitle || ['Lucky Draw'].includes(that.config.webTitle))) {
+                needSetWebTitle = true;
+            }
+            return needSetWebTitle;
+        },
     },
     watch: {
         triggerOpenGetLucky: {
@@ -136,6 +148,13 @@ export default {
             setFocusPrizeSN: 'setFocusPrizeSN',
             triggerModal: 'triggerModal',
         }),
+        gotoSetWebTitle(){
+            const that = this;
+            that.triggerModal({ key: 'GetLucky', close: true });
+            setTimeout(() => {
+                that.triggerModal({ key: 'Setting' });
+            }, 100);
+        },
         editPrizeList(){
             const that = this;
             $(this.$refs.box).modal('hide');

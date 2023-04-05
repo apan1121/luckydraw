@@ -32,6 +32,13 @@
     background-size: cover;
 }
 
+.get-lucky-list{
+    &.disabled{
+        filter: blur(2px) grayscale(1);
+        pointer-events: none;
+    }
+}
+
 .lucky-draw-choose-list{
     .lucky-draw-choose-item{
         display: flex;

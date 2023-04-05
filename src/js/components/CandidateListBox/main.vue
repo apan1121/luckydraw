@@ -71,6 +71,7 @@ export default {
     },
     computed: {
         ...mapGetters([
+            'config',
             'triggerOpenCandidateList',
             'candidateList',
             'candidateList_sort',

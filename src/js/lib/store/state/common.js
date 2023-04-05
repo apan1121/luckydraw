@@ -40,6 +40,7 @@ export default {
         backgroundImg: '',
         backgroundOpacity: 0.5,
         defaultRunTime: 50,
+        isTutorial: false,
     },
 
     /**
@@ -61,6 +62,7 @@ export default {
         backgroundImg: '',
         backgroundOpacity: 0.5,
         defaultRunTime: 50,
+        isTutorial: false,
     },
 
     /**
@@ -190,6 +192,7 @@ export default {
         headerColor: '#343a40',
         subtitleSize: 16,
         titleSize: 21,
+        isTutorial: true,
     },
 
     isTutorial: false,
