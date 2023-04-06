@@ -183,7 +183,7 @@ export default {
                         that.triggerModal({ key: 'Setting' });
                         setTimeout(() => {
                             $next();
-                        }, 10);
+                        }, 200);
                     },
                 },
             ];
