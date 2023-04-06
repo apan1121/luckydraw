@@ -57,9 +57,8 @@
     </div>
 </template>
 <script>
-import popup from 'lib/common/util/popup';
 import { mapActions, mapMutations, mapGetters } from 'vuex';
-import { trackJS } from 'lib/common/util';
+import { Tutorial, popup, trackJS } from 'lib/common/util';
 
 const audio = {
     ding: new Audio('./dist/mp3/ding.mp3'),
@@ -101,7 +100,7 @@ export default {
         needSetWebTitle(){
             const that = this;
             let needSetWebTitle = false;
-            if (!that.config.isTutorial && (!that.config.webTitle || ['Lucky Draw'].includes(that.config.webTitle))) {
+            if (!that.config.isTutorial && (!that.config.webTitle || ['Lucky Draw', 'LuckyDraw', 'luckydraw'].includes(that.config.webTitle))) {
                 needSetWebTitle = true;
             }
             return needSetWebTitle;
@@ -150,10 +149,46 @@ export default {
         }),
         gotoSetWebTitle(){
             const that = this;
+            // that.triggerModal({ key: 'GetLucky', close: true });
+            // setTimeout(() => {
+            //     that.triggerModal({ key: 'Setting' });
+            // }, 100);
+
             that.triggerModal({ key: 'GetLucky', close: true });
-            setTimeout(() => {
-                that.triggerModal({ key: 'Setting' });
-            }, 100);
+            const config = {
+                offset: {
+                    top: 60,
+                    bottom: 60,
+                },
+                startCallback(){
+                    trackJS.mixpanel('TutorialStart_trigger', { type: 'WebsiteTitle' });
+                    trackJS.gtag('event', 'TutorialStart_trigger', { type: 'WebsiteTitle' });
+                },
+                closeCallback(){
+                    trackJS.mixpanel('TutorialEnd_trigger', { type: 'WebsiteTitle' });
+                    trackJS.gtag('event', 'TutorialEnd_trigger', { type: 'WebsiteTitle' });
+                },
+                step_callback(node, IntroInfo){
+                    trackJS.mixpanel('TutorialStep_trigger', { type: 'WebsiteTitle', index: IntroInfo.index });
+                    trackJS.gtag('event', 'TutorialStep_trigger', { type: 'WebsiteTitle', index: IntroInfo.index });
+                },
+            };
+
+            const step = [
+                {
+                    target: '#SettingBox input[name="webTitle"]',
+                    title: '獨特的抽獎',
+                    intro: '在抽獎前，設定一個屬於您的獨特抽獎活動名稱。',
+                    beforeAction(Element, TutorialNode, $next){
+                        that.triggerModal({ key: 'Setting' });
+                        setTimeout(() => {
+                            $next();
+                        }, 10);
+                    },
+                },
+            ];
+            const tutorial1 = new Tutorial(step, config);
+            tutorial1.run();
         },
         editPrizeList(){
             const that = this;

@@ -397,6 +397,12 @@ export default {
             that.input = input;
             that.diceFocus = string.randRange(0, that.diceArr.length - 1);
         },
+        donateAct(){
+            trackJS.gtag('event', 'donate_click', {
+            });
+            trackJS.mixpanel('donate_click', {
+            });
+        },
     },
 };
 </script>
