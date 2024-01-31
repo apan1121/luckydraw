@@ -7,7 +7,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title">
                         <i class="fas fa-award"></i>
-                        獎項名單
+                        獎項名單 [{{ inputPrizeListCnt.cnt }} / {{ inputPrizeListCnt.amount }}]
                     </h5>
                     <button type="button" class="close" data-dismiss="modal"
                         aria-label="Close"
@@ -133,6 +133,17 @@ export default {
             'triggerOpenPrizeList',
             'prizeList',
         ]),
+        inputPrizeListCnt(){
+            let PrizeCnt = 0;
+            let PrizeAmountCnt = 0;
+            this.inputPrizeList.forEach((info) => {
+                if (info.del === false) {
+                    PrizeCnt += 1;
+                    PrizeAmountCnt += info.amount;
+                }
+            });
+            return { cnt: PrizeCnt, amount: PrizeAmountCnt };
+        },
     },
     watch: {
         triggerOpenPrizeList: {

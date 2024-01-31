@@ -7,7 +7,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title">
                         <i class="fas fa-user-edit"></i>
-                        編輯名單
+                        編輯名單 [{{ candidateListFormat.length }}]
                     </h5>
                     <button type="button" class="close" data-dismiss="modal"
                         aria-label="Close"
@@ -76,6 +76,13 @@ export default {
             'candidateList',
             'candidateList_sort',
         ]),
+        candidateListFormat(){
+            const that = this;
+            const candidateList = JSON.parse(JSON.stringify(that.candidateList));
+            return candidateList.filter((info) => {
+                return info.del === false;
+            });
+        },
     },
     watch: {
         triggerOpenCandidateList: {
@@ -94,15 +101,17 @@ export default {
     mounted(){
         const that = this;
         $(that.$refs.box).bind('shown.bs.modal', () => {
-            const candidateList = JSON.parse(JSON.stringify(that.candidateList));
+            const candidateList = JSON.parse(JSON.stringify(that.candidateListFormat));
             let candidateListTextarea = [];
             candidateList.forEach((info) => {
-                const data = [];
-                data.push(info.name);
-                if (!!info.pos) {
-                    data.push(info.pos);
+                if (info.del === false) {
+                    const data = [];
+                    data.push(info.name);
+                    if (!!info.pos) {
+                        data.push(info.pos);
+                    }
+                    candidateListTextarea.push(data.join(','));
                 }
-                candidateListTextarea.push(data.join(','));
             });
             candidateListTextarea = candidateListTextarea.join('\n');
             that.candidateListTextarea = candidateListTextarea;
