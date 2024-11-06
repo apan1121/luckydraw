@@ -131,8 +131,9 @@ export default {
     prizeMapping(state){
         const prizeList = JSON.parse(JSON.stringify(state.prizeList));
         const prizeMapping = {};
-        prizeList.forEach((item) => {
+        prizeList.forEach((item, index) => {
             if (item.del === false) {
+                item.index = index;
                 prizeMapping[item.prize_sn] = item;
             }
         });

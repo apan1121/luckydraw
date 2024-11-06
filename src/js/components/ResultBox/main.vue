@@ -17,6 +17,20 @@
                         </button>
                     </div>
                     <div class="modal-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">排序方式</span>
+                                    </div>
+                                    <select v-model="sortType" class="form-control">
+                                        <template v-for="(val, key) in sortTypeOptions">
+                                            <option :key="key" :value="key" v-text="val"></option>
+                                        </template>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <template v-if="ResultList.length > 0">
                             <table class="table">
                                 <thead>
@@ -154,6 +168,12 @@ export default {
             },
             editCandidateInfo: false,
             showGooglSupport: false,
+
+            sortType: 'candidateIndex',
+            sortTypeOptions: {
+                prizeIndex: '獎項順序',
+                candidateIndex: '候選名單順序',
+            },
         };
     },
     computed: {
@@ -173,6 +193,13 @@ export default {
             } else {
                 $(that.$refs.box).modal('hide');
             }
+        },
+        sortType: {
+            immediate: true,
+            handler(){
+                const that = this;
+                that.formatResultList();
+            },
         },
     },
     created(){},
@@ -214,38 +241,65 @@ export default {
         }),
         formatResultList(){
             const that = this;
-            const prizeMapping = JSON.parse(JSON.stringify(that.prizeMapping));
-            let ResultList = [];
-            let candidateList = JSON.parse(JSON.stringify(that.candidateList));
-            candidateList = candidateList.filter(item => item.del === false);
+            clearTimeout(that.formatResultListTimer);
 
-            candidateList.forEach((item) => {
-                const candidateInfo = item;
-                const award = [];
-                const award_title = [];
-                candidateInfo.award.forEach((prize_sn) => {
-                    if (prizeMapping[prize_sn] && 1) {
-                        award.push(prize_sn);
-                        award_title.push(prizeMapping[prize_sn].title);
+            that.formatResultListTimer = setTimeout(() => {
+                const { sortType, prizeList } = that;
+                const prizeMapping = JSON.parse(JSON.stringify(that.prizeMapping));
+                let ResultList = [];
+                let candidateList = JSON.parse(JSON.stringify(that.candidateList));
+                candidateList = candidateList.filter(item => item.del === false);
+
+                const candidatePadWithZeroLength = `${candidateList.length}`.length;
+                const prizePadWithZeroLength = `${prizeList.length}`.length;
+
+                candidateList.forEach((item, candidateIndex) => {
+                    const candidateInfo = item;
+                    const award = [];
+                    const award_title = [];
+                    let award_index = false;
+                    candidateInfo.award.forEach((prize_sn) => {
+                        if (prizeMapping[prize_sn] && 1) {
+                            award.push(prize_sn);
+                            award_title.push(prizeMapping[prize_sn].title);
+                            award_index = prizeMapping[prize_sn].index;
+                        }
+                    });
+                    candidateInfo.award = award;
+                    candidateInfo.award_title = award_title.join(',');
+                    candidateInfo.haveAward = award.length > 0;
+                    candidateInfo.award_index = award_index;
+
+                    const sort_index = [];
+                    sort_index.push(candidateInfo.haveAward ? 0 : 1);
+                    switch (sortType) {
+                        case 'prizeIndex':
+                            sort_index.push(that.padWithZeros(award_index, prizePadWithZeroLength));
+                            sort_index.push(that.padWithZeros(candidateIndex, candidatePadWithZeroLength));
+                            break;
+                        default:
+                        case 'candidateIndex':
+                            sort_index.push(that.padWithZeros(candidateIndex, candidatePadWithZeroLength));
+                            break;
                     }
+                    candidateInfo.sort_index = sort_index.join(':');
+
+                    ResultList.push(candidateInfo);
                 });
-                candidateInfo.award = award;
-                candidateInfo.award_title = award_title.join(',');
-                candidateInfo.haveAward = award.length > 0;
-                ResultList.push(candidateInfo);
-            });
-            ResultList = ResultList.sort((a, b) => {
-                if (a.haveAward < b.haveAward) {
-                    return 1;
-                }
 
-                if (a.haveAward === b.haveAward) {
-                    return 0;
-                }
+                ResultList = ResultList.sort((a, b) => {
+                    if (a.sort_index > b.sort_index) {
+                        return 1;
+                    }
 
-                return -1;
+                    if (a.sort_index === b.sort_index) {
+                        return 0;
+                    }
+
+                    return -1;
+                });
+                that.ResultList = ResultList;
             });
-            that.ResultList = ResultList;
         },
         openEdit(candidateInfo){
             trackJS.mixpanel('ResultEdit_click', candidateInfo);
@@ -317,6 +371,9 @@ export default {
                 $(that.$refs.box).modal('show');
                 $(that.$refs.download).modal('hide');
             }, waitTime);
+        },
+        padWithZeros(num, totalLength){
+            return String(num).padStart(totalLength, '0');
         },
     },
 };
